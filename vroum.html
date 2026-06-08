@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Vroum !"/>
+<title>Vroum !</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#080D1A;--card:#0F1729;--el:#162035;--border:#1D2D45;--acc:#00C896;--blue:#3B82F6;--warn:#F59E0B;--danger:#EF4444;--text:#E2E8F0;--muted:#64748B;--sub:#1E2D45}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;overflow:hidden}
+#shell{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+#topbar{display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,20px)+10px) 16px 10px;background:rgba(10,16,32,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);flex-shrink:0}
+#content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+#bnav{display:flex;background:rgba(10,16,32,.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom,0px);flex-shrink:0}
+.logo{font-size:22px;font-weight:900;color:var(--acc)}
+.apill{display:flex;align-items:center;gap:5px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#FCA5A5;cursor:pointer}
+.sync-btn{display:flex;align-items:center;gap:4px;background:var(--el);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:inherit;border:none}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;cursor:pointer;font-size:10px;font-weight:600;color:var(--muted);position:relative;user-select:none}
+.ntab.on{color:var(--acc)}
+.ntab svg{width:22px;height:22px}
+.ndot{position:absolute;top:6px;right:calc(50% - 15px);width:7px;height:7px;background:var(--danger);border-radius:50%;border:1.5px solid var(--bg)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px}
+.ctit{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+.kg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+.kl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.kv{font-size:24px;font-weight:800;color:var(--text);line-height:1}
+.ks{font-size:11px;color:var(--muted);margin-top:5px}
+.ar{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--sub)}
+.ar:last-child{border-bottom:none}
+.ad{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.ad.crit{background:var(--danger)}.ad.warn{background:var(--warn)}.ad.info{background:var(--blue)}
+.at{font-size:13px;color:var(--text);line-height:1.3}
+.asub{font-size:11px;color:var(--muted);margin-top:2px}
+.vc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px}
+.plate{font-size:17px;font-weight:800;color:var(--text);letter-spacing:.5px}
+.vmod{font-size:13px;color:var(--muted);margin-top:2px}
+.vs{display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.vi{font-size:11px;color:var(--muted)}
+.vi b{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.bg{background:rgba(0,200,150,.12);color:var(--acc)}
+.bb{background:rgba(59,130,246,.12);color:var(--blue)}
+.ba{background:rgba(245,158,11,.12);color:var(--warn)}
+.br{background:rgba(239,68,68,.12);color:var(--danger)}
+.bx{background:var(--el);color:var(--muted)}
+.row{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--sub)}
+.row:last-child{border-bottom:none}
+.rl{font-size:13px;font-weight:600;color:var(--text)}
+.rs{font-size:11px;color:var(--muted);margin-top:2px}
+.rr{font-size:13px;font-weight:700;flex-shrink:0;margin-left:6px;margin-top:2px}
+.ra{display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:6px}
+.fab{position:fixed;bottom:calc(82px + env(safe-area-inset-bottom,0px));right:20px;width:54px;height:54px;border-radius:27px;background:var(--acc);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,200,150,.4);cursor:pointer;z-index:30;border:none;font-size:28px;line-height:1;color:#000}
+.stabs{display:flex;gap:2px;background:var(--el);border-radius:10px;padding:3px;margin-bottom:14px}
+.stab{flex:1;text-align:center;padding:7px 4px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)}
+.stab.on{background:var(--acc);color:#000}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:50;display:flex;align-items:flex-end}
+.sh{background:var(--card);border-radius:24px 24px 0 0;width:100%;max-height:92dvh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
+.shhd{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 4px}
+.shtop{display:flex;align-items:center;justify-content:space-between;padding:12px 20px 10px;border-bottom:1px solid var(--border)}
+.shtt{font-size:17px;font-weight:700;color:var(--text)}
+.shb{padding:16px 20px}
+.shf{padding:12px 20px;display:flex;gap:10px;border-top:1px solid var(--border)}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fg label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+input,select{background:var(--el);border:1px solid var(--border);border-radius:10px;padding:12px 13px;font-size:16px;color:var(--text);font-family:inherit;width:100%;outline:none;-webkit-appearance:none;appearance:none}
+input:focus,select:focus{border-color:var(--acc)}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:inherit;flex:1;color:var(--text)}
+.btn.p{background:var(--acc);color:#000}
+.btn.g{background:var(--el)}
+.bsm{padding:7px 10px;font-size:12px;border-radius:8px;display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border);background:var(--el);color:var(--text);cursor:pointer;font-family:inherit}
+.bsm.d{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--danger)}
+.legend{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
+.lgi{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
+.lgd{width:8px;height:8px;border-radius:2px;display:inline-block}
+.empty{text-align:center;padding:32px 0;color:var(--muted);font-size:14px}
+/* Code screen */
+#code-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;z-index:200}
+.code-logo{font-size:48px;margin-bottom:16px}
+.code-title{font-size:26px;font-weight:900;color:var(--acc);margin-bottom:8px}
+.code-sub{font-size:14px;color:var(--muted);margin-bottom:40px;text-align:center}
+.code-input{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 20px;font-size:20px;color:var(--text);font-family:inherit;width:100%;max-width:300px;outline:none;text-align:center;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}
+.code-input:focus{border-color:var(--acc)}
+.code-btn{background:var(--acc);color:#000;border:none;border-radius:14px;padding:14px;font-size:16px;font-weight:700;width:100%;max-width:300px;cursor:pointer;font-family:inherit}
+.code-err{color:var(--danger);font-size:13px;margin-top:8px;height:20px}
+/* Loading */
+#loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:16px}
+.spin{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-size:14px;color:var(--muted)}
+/* Toast */
+#toast{position:fixed;top:calc(env(safe-area-inset-top,20px)+60px);left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:20px;padding:8px 18px;font-size:13px;font-weight:600;color:var(--acc);z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1}
+#modal{display:none}
+#modal.open{display:flex}
+</style>
+</head>
+<body>
+
+<!-- Code screen -->
+<div id="code-screen">
+  <div class="code-logo">🚗</div>
+  <div class="code-title">Vroum !</div>
+  <div class="code-sub">Entrez le code d'accès</div>
+  <input class="code-input" id="code-input" type="text" placeholder="CODE" autocomplete="off" autocorrect="off" spellcheck="false"/>
+  <button class="code-btn" id="code-btn">Accéder</button>
+  <div class="code-err" id="code-err"></div>
+</div>
+
+<!-- Loader -->
+<div id="loader" style="display:none">
+  <div class="spin"></div>
+  <div class="load-txt">Chargement…</div>
+</div>
+
+<!-- App -->
+<div id="shell" style="display:none">
+  <div id="topbar"></div>
+  <div id="content"></div>
+  <div id="bnav"></div>
+</div>
+
+<!-- Modal -->
+<div id="modal"></div>
+
+<!-- Toast -->
+<div id="toast">✓ Enregistré</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+'use strict';
+
+// ─── Config ────────────────────────────────────────────────────────────────
+var SB_URL = 'https://bpboyrmgluzvdowhfvoj.supabase.co';
+var SB_KEY = 'sb_publishable_ftmSpnvmhtjC45xn7JJNgA_QCymTSbN';
+var ACCESS_CODES = ['VROUM', 'VROUM2025', 'FLEET'];
+var sb = null; // Supabase client, initialized after SDK loads
+
+// ─── Supabase client ────────────────────────────────────────────────────────
+function initSupabase(){
+  sb = window.supabase.createClient(SB_URL, SB_KEY);
+}
+
+async function sbLoad(){
+  var res = await sb.from('vroum_data').select('key,value');
+  if(res.error) throw new Error(res.error.message);
+  return res.data;
+}
+
+async function sbSave(key, value){
+  var res = await sb.from('vroum_data').upsert({key:key, value:value});
+  if(res.error) throw new Error(res.error.message);
+}
+
+// ─── Helpers ───────────────────────────────────────────────────────────────
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function eur(n){return n!=null?Number(n).toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}):'—'}
+function fdt(s){return s?new Date(s).toLocaleDateString('fr-FR'):'—'}
+function daysTo(s){return s?Math.ceil((new Date(s)-Date.now())/86400000):9999}
+function q(sel){return document.querySelector(sel)}
+
+function showToast(msg){
+  var t=q('#toast'); t.textContent=msg||'✓ Enregistré'; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},2000);
+}
+
+// ─── State ─────────────────────────────────────────────────────────────────
+var D = {vehicles:[],drivers:[],insurances:[],controls:[],maintenances:[],repairs:[],fuelLogs:[],reservations:[]};
+var TAB = 'home';
+var STAB = {fleet:'v',entretien:'m',plus:'res'};
+var MODAL = null;
+
+var ENTITY_KEY = {vehicle:'vehicles',driver:'drivers',maintenance:'maintenances',insurance:'insurances',control:'controls',fuel:'fuelLogs',reservation:'reservations',repair:'repairs'};
+
+// ─── Icons ─────────────────────────────────────────────────────────────────
+function ic(name,size,color){
+  size=size||22; color=color||'currentColor';
+  var paths={
+    home:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+    car:'<path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="14.5" cy="17.5" r="2.5"/>',
+    wrench:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+    fuel:'<path d="M3 22V2l7 4 7-4v20"/><line x1="3" y1="12" x2="17" y2="12"/>',
+    more:'<circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/>',
+    plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+    x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+    check:'<polyline points="20 6 9 17 4 12"/>',
+    bell:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>',
+    refresh:'<polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>',
+    edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
+    trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>'
+  };
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(paths[name]||'')+'</svg>';
+}
+
+// ─── Business logic ────────────────────────────────────────────────────────
+function getAlerts(){
+  var a=[];
+  D.insurances.forEach(function(i){var v=D.vehicles.find(function(x){return x.id===i.vehicleId});var n=daysTo(i.endDate);if(n<=30)a.push({id:'i'+i.id,level:n<=7?'crit':'warn',text:'Assurance '+(v?v.plate:'?')+' expire dans '+n+'j',sub:i.provider+' · '+fdt(i.endDate)});});
+  D.controls.forEach(function(c){var v=D.vehicles.find(function(x){return x.id===c.vehicleId});var n=daysTo(c.nextDate);if(n<=60)a.push({id:'c'+c.id,level:n<=14?'crit':'warn',text:'CT '+(v?v.plate:'?')+' dans '+n+'j',sub:'Dernier : '+fdt(c.date)});});
+  D.maintenances.forEach(function(m){var v=D.vehicles.find(function(x){return x.id===m.vehicleId});if(!v)return;var dd=daysTo(m.nextDate),kl=(m.nextMileage||0)-v.mileage;if(dd<=30||kl<=1000){var crit=dd<=0||kl<=0;a.push({id:'m'+m.id,level:crit?'crit':'warn',text:'Entretien '+v.plate+(dd<=0?' en retard':' dans '+dd+'j'),sub:m.type+' · '+fdt(m.nextDate)});}});
+  D.vehicles.filter(function(v){return v.status==='active'}).forEach(function(v){var times=D.fuelLogs.filter(function(f){return f.vehicleId===v.id}).map(function(f){return new Date(f.date).getTime()});D.reservations.filter(function(r){return r.vehicleId===v.id&&new Date(r.endDate)<new Date()}).forEach(function(r){times.push(new Date(r.endDate).getTime())});if(!times.length){a.push({id:'idle'+v.id,level:'info',text:v.plate+' — aucune activité',sub:'Potentiellement sous-utilisé'});return;}var ago=Math.floor((Date.now()-Math.max.apply(null,times))/86400000);if(ago>45)a.push({id:'idle'+v.id,level:'info',text:v.plate+' inactif depuis '+ago+'j',sub:'Sous-utilisation détectée'});});
+  return a.sort(function(a,b){return ({crit:0,warn:1,info:2}[a.level]||2)-({crit:0,warn:1,info:2}[b.level]||2)});
+}
+
+function monthCost(){var now=new Date(),m=now.getMonth(),y=now.getFullYear();return D.fuelLogs.concat(D.maintenances).filter(function(f){var x=new Date(f.date);return x.getMonth()===m&&x.getFullYear()===y}).reduce(function(s,f){return s+(f.totalCost||f.cost||0)},0);}
+
+function getMonthlyData(){return Array.from({length:6},function(_,i){var dt=new Date();dt.setMonth(dt.getMonth()-(5-i));var y=dt.getFullYear(),m=dt.getMonth();function inM(f){var x=new Date(f.date);return x.getFullYear()===y&&x.getMonth()===m}return{name:dt.toLocaleDateString('fr-FR',{month:'short'}),Carb:Math.round(D.fuelLogs.filter(inM).reduce(function(s,f){return s+f.totalCost},0)),Entr:Math.round(D.maintenances.filter(inM).reduce(function(s,m){return s+m.cost},0)),Rep:Math.round(D.repairs.filter(inM).reduce(function(s,r){return s+r.cost},0))};});}
+
+// ─── SVG Charts ────────────────────────────────────────────────────────────
+function barChart(data,key,color){var vals=data.map(function(d){return d[key]||0});var max=Math.max.apply(null,vals)||1;var W=320,H=130,pb=22,pt=8,pl=8,pr=8,cw=W-pl-pr,ch=H-pb-pt;var bw=Math.floor((cw/data.length)*0.55),gap=cw/data.length;var bars=data.map(function(d,i){var bh=Math.max(2,Math.floor(((d[key]||0)/max)*ch));var x=pl+i*gap+(gap-bw)/2;return'<rect x="'+x+'" y="'+(pt+ch-bh)+'" width="'+bw+'" height="'+bh+'" fill="'+color+'" rx="2"/><text x="'+(pl+i*gap+gap/2)+'" y="'+(H-5)+'" text-anchor="middle" font-size="9" fill="#64748B">'+esc(d.name)+'</text>';}).join('');return'<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'">'+bars+'</svg>';}
+
+function groupedBarChart(data){var keys=['Carb','Entr','Rep'],colors=['#3B82F6','#00C896','#F59E0B'];var max=Math.max.apply(null,data.map(function(d){return Math.max(d.Carb||0,d.Entr||0,d.Rep||0)}))||1;var W=320,H=150,pb=22,pt=8,pl=8,pr=8,cw=W-pl-pr,ch=H-pb-pt,grpW=cw/data.length,bw=Math.floor(grpW*0.22);var bars=data.map(function(d,i){return keys.map(function(k,j){var bh=Math.max((d[k]||0)>0?2:0,Math.floor(((d[k]||0)/max)*ch));var x=pl+i*grpW+j*(bw+2)+(grpW-keys.length*(bw+2))/2;return'<rect x="'+x+'" y="'+(pt+ch-bh)+'" width="'+bw+'" height="'+bh+'" fill="'+colors[j]+'" rx="2"/>';}).join('')+'<text x="'+(pl+i*grpW+grpW/2)+'" y="'+(H-5)+'" text-anchor="middle" font-size="9" fill="#64748B">'+esc(d.name)+'</text>';}).join('');return'<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'">'+bars+'</svg>';}
+
+// ─── Badge & helpers ───────────────────────────────────────────────────────
+var SBMAP={active:'bg Actif',available:'bb Dispo',maintenance:'ba Entretien',inactive:'bx Inactif',confirmed:'bg Confirmé',pending:'ba En attente',canceled:'br Annulé'};
+function sbadge(s){var p=(SBMAP[s]||'bx '+s).split(' ');return'<span class="badge '+p[0]+'">'+esc(p.slice(1).join(' '))+'</span>'}
+function dcol(d){var x=daysTo(d);return x<0?'#EF4444':x<30?'#F59E0B':'#94A3B8'}
+function vName(id){var v=D.vehicles.find(function(x){return x.id===id});return v?v.plate+' '+v.brand:id}
+function dName(id){var d=D.drivers.find(function(x){return x.id===id});return d?d.name:'—'}
+
+// ─── Form builders ─────────────────────────────────────────────────────────
+function fi(label,name,val,type,ph){return'<div class="fg"><label>'+label+'</label><input type="'+(type||'text')+'" name="'+name+'" value="'+esc(val||'')+'" placeholder="'+esc(ph||'')+'"/></div>'}
+function fs(label,name,val,opts){var html='<div class="fg"><label>'+label+'</label><select name="'+name+'"><option value="">— Choisir —</option>';opts.forEach(function(o){var v=o.v||o,l=o.l||o;html+='<option value="'+esc(v)+'"'+(val==v?' selected':'')+'>'+esc(l)+'</option>';});return html+'</select></div>'}
+var vOpts=function(){return D.vehicles.map(function(v){return{v:v.id,l:v.plate+' — '+v.brand+' '+v.model}})};
+var dOpts=function(){return D.drivers.map(function(d){return{v:d.id,l:d.name}})};
+
+function modalForm(modal){
+  if(!modal)return'';
+  var e=modal.entity,item=null;
+  if(modal.id){var arr=D[ENTITY_KEY[e]];if(arr)item=arr.find(function(x){return x.id===modal.id});}
+  var i=item||{},title='',body='';
+  if(e==='vehicle'){title=modal.id?'Modifier':'Nouveau véhicule';body=fi('Immatriculation','plate',i.plate,'text','AB-123-CD')+fi('Marque','brand',i.brand)+fi('Modèle','model',i.model)+fi('Année','year',i.year,'number')+fi('Kilométrage','mileage',i.mileage,'number')+fs('Énergie','fuelType',i.fuelType,['Diesel','Essence','Hybride','Électrique','GPL'])+fs('Statut','status',i.status,[{v:'active',l:'Actif'},{v:'available',l:'Disponible'},{v:'maintenance',l:'En entretien'},{v:'inactive',l:'Inactif'}])+fs('Conducteur','driverId',i.driverId,dOpts())+fi("Date d'achat",'purchaseDate',i.purchaseDate,'date')+fi("Prix d'achat (€)",'purchasePrice',i.purchasePrice,'number');}
+  else if(e==='driver'){title=modal.id?'Modifier':'Nouveau conducteur';body=fi('Nom','name',i.name)+fi('N° Permis','license',i.license)+fi('Expiration','licenseExpiry',i.licenseExpiry,'date')+fi('Téléphone','phone',i.phone,'tel')+fi('Email','email',i.email,'email');}
+  else if(e==='maintenance'){title='Entretien';body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Type','type',i.type,'text','Vidange…')+fi('Date','date',i.date,'date')+fi('Km effectué','mileageDone',i.mileageDone,'number')+fi('Coût (€)','cost',i.cost,'number')+fi('Prestataire','provider',i.provider)+fi('Prochain RDV','nextDate',i.nextDate,'date')+fi('Prochain Km','nextMileage',i.nextMileage,'number');}
+  else if(e==='insurance'){title='Assurance';body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Assureur','provider',i.provider)+fi('N° Police','policy',i.policy)+fs('Type','type',i.type,['Tous risques','Tiers','Flotte'])+fi('Début','startDate',i.startDate,'date')+fi('Fin','endDate',i.endDate,'date')+fi('Coût annuel (€)','annualCost',i.annualCost,'number');}
+  else if(e==='control'){title='Contrôle technique';body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Date CT','date',i.date,'date')+fi('Prochain CT','nextDate',i.nextDate,'date')+fs('Résultat','result',i.result,['Favorable','Défavorable'])+fi('Coût (€)','cost',i.cost,'number');}
+  else if(e==='fuel'){title='Saisir un plein';body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Date','date',i.date||new Date().toISOString().slice(0,10),'date')+fi('Litres','liters',i.liters,'number','52')+fi('Prix/L (€)','pricePerLiter',i.pricePerLiter,'number','1.72')+fi('Total (€)','totalCost',i.totalCost,'number','Auto si vide')+fi('Kilométrage','mileage',i.mileage,'number');}
+  else if(e==='reservation'){title='Réservation';body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fs('Conducteur','driverId',i.driverId,dOpts())+fi('Départ','startDate',i.startDate,'date')+fi('Retour','endDate',i.endDate,'date')+fi('Motif','purpose',i.purpose,'text','Déplacement…')+fs('Statut','status',i.status||'pending',[{v:'pending',l:'En attente'},{v:'confirmed',l:'Confirmé'},{v:'canceled',l:'Annulé'}]);}
+  else if(e==='repair'){title='Réparation';body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Date','date',i.date||new Date().toISOString().slice(0,10),'date')+fi('Description','description',i.description,'text','Remplacement…')+fi('Prestataire','provider',i.provider)+fi('Coût (€)','cost',i.cost,'number')+fi('Kilométrage','mileage',i.mileage,'number');}
+  return'<div class="ov open" id="modal-inner"><div class="sh"><div class="shhd"></div><div class="shtop"><span class="shtt">'+title+'</span><button class="bsm" data-a="close-modal">'+ic('x',20)+'</button></div><div class="shb"><form id="modal-form">'+body+'</form></div><div class="shf"><button class="btn g" data-a="close-modal">Annuler</button><button class="btn p" data-a="save-modal">'+ic('check',16,'#000')+'Enregistrer</button></div></div></div>';
+}
+
+// ─── Views ─────────────────────────────────────────────────────────────────
+function renderHome(){
+  var alerts=getAlerts(),crits=alerts.filter(function(a){return a.level==='crit'}).length;
+  var upcoming=D.reservations.filter(function(r){return new Date(r.startDate)>=new Date()&&r.status!=='canceled'}).length;
+  var html='';
+  if(crits>0)html+='<div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:#FCA5A5;display:flex;align-items:center;gap:8px">'+ic('bell',15,'#FCA5A5')+crits+' alerte'+(crits>1?'s critiques':' critique')+'</div>';
+  html+='<div class="kg"><div class="kpi"><div class="kl">Véhicules</div><div class="kv">'+D.vehicles.length+'</div><div class="ks">'+D.vehicles.filter(function(v){return v.status==='active'}).length+' actifs</div></div><div class="kpi"><div class="kl">Alertes</div><div class="kv" style="color:'+(crits>0?'#EF4444':alerts.length>0?'#F59E0B':'#00C896')+'">'+alerts.length+'</div><div class="ks">'+crits+' critiques</div></div><div class="kpi"><div class="kl">Ce mois</div><div class="kv" style="font-size:16px">'+eur(monthCost())+'</div><div class="ks">Carb. + entretien</div></div><div class="kpi"><div class="kl">Réservations</div><div class="kv">'+upcoming+'</div><div class="ks">À venir</div></div></div>';
+  html+='<div class="card"><div class="ctit">Coûts 6 mois</div>'+groupedBarChart(getMonthlyData())+'<div class="legend"><div class="lgi"><span class="lgd" style="background:#3B82F6"></span>Carburant</div><div class="lgi"><span class="lgd" style="background:#00C896"></span>Entretien</div><div class="lgi"><span class="lgd" style="background:#F59E0B"></span>Réparation</div></div></div>';
+  html+='<div class="card"><div class="ctit">Alertes</div>';
+  if(!alerts.length)html+='<div class="empty">✓ Tout est OK</div>';
+  else alerts.forEach(function(a){html+='<div class="ar"><div class="ad '+a.level+'"></div><div><div class="at">'+esc(a.text)+'</div><div class="asub">'+esc(a.sub)+'</div></div></div>'});
+  return html+'</div>';
+}
+
+function renderFleet(){
+  var st=STAB.fleet;
+  var html='<div class="stabs"><div class="stab '+(st==='v'?'on':'')+'" data-a="stab-fleet-v">Véhicules</div><div class="stab '+(st==='d'?'on':'')+'" data-a="stab-fleet-d">Conducteurs</div></div>';
+  if(st==='v'){
+    if(!D.vehicles.length)html+='<div class="empty">Aucun véhicule — appuyez sur + pour ajouter</div>';
+    D.vehicles.forEach(function(v){
+      var drv=D.drivers.find(function(d){return d.id===v.driverId});
+      var va=getAlerts().filter(function(a){return a.id.indexOf(v.id)>=0});
+      var arr=(SBMAP[v.status]||'bx Inconnu').split(' ');
+      html+='<div class="vc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="plate">'+esc(v.plate)+'</div><div class="vmod">'+esc(v.brand)+' '+esc(v.model)+' · '+v.year+'</div></div><span class="badge '+arr[0]+'">'+esc(arr.slice(1).join(' '))+'</span></div>';
+      if(va.length)html+='<div style="margin-top:8px;padding:5px 10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;font-size:11px;color:#F87171">⚠ '+va.length+' alerte'+(va.length>1?'s':'')+'</div>';
+      html+='<div class="vs"><div class="vi"><b>'+v.mileage.toLocaleString('fr-FR')+' km</b>Km</div><div class="vi"><b>'+esc(v.fuelType)+'</b>Énergie</div><div class="vi"><b>'+esc(drv?drv.name:'—')+'</b>Conducteur</div></div><div style="display:flex;gap:8px;margin-top:12px"><button class="bsm" data-a="open-edit" data-entity="vehicle" data-id="'+v.id+'">'+ic('edit',13)+'Modifier</button><button class="bsm d" data-a="delete" data-entity="vehicle" data-id="'+v.id+'">'+ic('trash',13)+'</button></div></div>';
+    });
+  } else {
+    if(!D.drivers.length)html+='<div class="empty">Aucun conducteur</div>';
+    D.drivers.forEach(function(drv){
+      var veh=D.vehicles.find(function(v){return v.driverId===drv.id});
+      var dExp=daysTo(drv.licenseExpiry);
+      html+='<div class="vc"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:15px;font-weight:700">'+esc(drv.name)+'</div><div style="font-size:12px;color:#64748B;margin-top:2px">'+esc(drv.phone)+'</div></div>'+(veh?'<span class="badge bb">'+esc(veh.plate)+'</span>':'<span class="badge bx">—</span>')+'</div><div style="font-size:12px;color:'+(dExp<90?'#F59E0B':'#94A3B8')+';margin-top:10px">Permis expire : '+fdt(drv.licenseExpiry)+(dExp<90?' (J-'+dExp+')':'')+'</div><div style="display:flex;gap:8px;margin-top:10px"><button class="bsm" data-a="open-edit" data-entity="driver" data-id="'+drv.id+'">'+ic('edit',13)+'Modifier</button><button class="bsm d" data-a="delete" data-entity="driver" data-id="'+drv.id+'">'+ic('trash',13)+'</button></div></div>';
+    });
+  }
+  html+='<button class="fab" data-a="open-add" data-entity="'+(st==='v'?'vehicle':'driver')+'">+</button>';
+  return html;
+}
+
+function renderEntretien(){
+  var st=STAB.entretien;
+  var html='<div class="stabs"><div class="stab '+(st==='m'?'on':'')+'" data-a="stab-entretien-m">Entretiens</div><div class="stab '+(st==='i'?'on':'')+'" data-a="stab-entretien-i">Assurances</div><div class="stab '+(st==='ct'?'on':'')+'" data-a="stab-entretien-ct">CT</div></div><div class="card">';
+  if(st==='m'){if(!D.maintenances.length)html+='<div class="empty">Aucun entretien</div>';D.maintenances.forEach(function(m){html+='<div class="row"><div><div class="rl">'+esc(m.type)+'</div><div class="rs">'+esc(vName(m.vehicleId))+'</div><div style="font-size:11px;color:'+dcol(m.nextDate)+';margin-top:3px">Prochain : '+fdt(m.nextDate)+'</div></div><div class="ra"><div class="rr">'+eur(m.cost)+'</div><button class="bsm" data-a="open-edit" data-entity="maintenance" data-id="'+m.id+'">'+ic('edit',13)+'</button><button class="bsm d" data-a="delete" data-entity="maintenance" data-id="'+m.id+'">'+ic('trash',13)+'</button></div></div>';});}
+  else if(st==='i'){if(!D.insurances.length)html+='<div class="empty">Aucune assurance</div>';D.insurances.forEach(function(i){var n=daysTo(i.endDate);html+='<div class="row"><div><div class="rl">'+esc(i.provider)+'</div><div class="rs">'+esc(vName(i.vehicleId))+' · '+esc(i.type)+'</div><div style="font-size:11px;color:'+dcol(i.endDate)+';margin-top:3px">Expire : '+fdt(i.endDate)+(n<=30?' (J-'+n+')':'')+'</div></div><div class="ra"><div class="rr">'+eur(i.annualCost)+'/an</div><button class="bsm" data-a="open-edit" data-entity="insurance" data-id="'+i.id+'">'+ic('edit',13)+'</button><button class="bsm d" data-a="delete" data-entity="insurance" data-id="'+i.id+'">'+ic('trash',13)+'</button></div></div>';});}
+  else{if(!D.controls.length)html+='<div class="empty">Aucun CT</div>';D.controls.forEach(function(ct){var n=daysTo(ct.nextDate);html+='<div class="row"><div><div class="rl">'+esc(vName(ct.vehicleId))+'</div><div class="rs">'+esc(ct.result)+'</div><div style="font-size:11px;color:'+dcol(ct.nextDate)+';margin-top:3px">Prochain : '+fdt(ct.nextDate)+(n<=60&&n>0?' (J-'+n+')':'')+'</div></div><div class="ra"><span class="badge '+(ct.result==='Favorable'?'bg':'br')+'">'+(ct.result==='Favorable'?'✓':'✗')+'</span><button class="bsm" data-a="open-edit" data-entity="control" data-id="'+ct.id+'">'+ic('edit',13)+'</button><button class="bsm d" data-a="delete" data-entity="control" data-id="'+ct.id+'">'+ic('trash',13)+'</button></div></div>';});}
+  var eMap={m:'maintenance',i:'insurance',ct:'control'};
+  return html+'</div><button class="fab" data-a="open-add" data-entity="'+eMap[st]+'">+</button>';
+}
+
+function renderCarburant(){
+  var cData=D.vehicles.map(function(v){var logs=D.fuelLogs.filter(function(f){return f.vehicleId===v.id}).sort(function(a,b){return new Date(a.date)-new Date(b.date)});var c=null;if(logs.length>=2){var km=logs[logs.length-1].mileage-logs[0].mileage;var lit=logs.slice(1).reduce(function(s,l){return s+l.liters},0);if(km>0)c=parseFloat(((lit/km)*100).toFixed(1));}return{name:v.plate,L:c};}).filter(function(x){return x.L!=null});
+  var sorted=D.fuelLogs.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+  var html='';
+  if(cData.length)html+='<div class="card"><div class="ctit">Consommation (L/100km)</div>'+barChart(cData,'L','#00C896')+'</div>';
+  html+='<div class="card"><div class="ctit">Historique</div>';
+  if(!sorted.length)html+='<div class="empty">Aucun plein enregistré</div>';
+  sorted.forEach(function(f){html+='<div class="row"><div><div class="rl">'+esc(vName(f.vehicleId))+'</div><div class="rs">'+fdt(f.date)+' · '+f.liters+'L · '+f.pricePerLiter+'€/L</div></div><div class="ra"><div class="rr" style="color:#00C896">'+eur(f.totalCost)+'</div><button class="bsm d" data-a="delete" data-entity="fuel" data-id="'+f.id+'">'+ic('trash',13)+'</button></div></div>';});
+  return html+'</div><button class="fab" data-a="open-add" data-entity="fuel">+</button>';
+}
+
+function renderPlus(){
+  var st=STAB.plus;
+  var html='<div class="stabs"><div class="stab '+(st==='res'?'on':'')+'" data-a="stab-plus-res">Réservations</div><div class="stab '+(st==='rep'?'on':'')+'" data-a="stab-plus-rep">Réparations</div></div><div class="card">';
+  if(st==='res'){
+    var res=D.reservations.slice().sort(function(a,b){return new Date(a.startDate)-new Date(b.startDate)});
+    if(!res.length)html+='<div class="empty">Aucune réservation</div>';
+    res.forEach(function(r){html+='<div class="row"><div><div class="rl">'+esc(vName(r.vehicleId))+'</div><div class="rs">'+esc(dName(r.driverId))+' · '+fdt(r.startDate)+' → '+fdt(r.endDate)+'</div>'+(r.purpose?'<div style="font-size:11px;color:#64748B;margin-top:2px">'+esc(r.purpose)+'</div>':'')+'</div><div class="ra">'+sbadge(r.status)+'<button class="bsm" data-a="open-edit" data-entity="reservation" data-id="'+r.id+'">'+ic('edit',13)+'</button><button class="bsm d" data-a="delete" data-entity="reservation" data-id="'+r.id+'">'+ic('trash',13)+'</button></div></div>';});
+  } else {
+    var rep=D.repairs.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date)});
+    if(!rep.length)html+='<div class="empty">Aucune réparation</div>';
+    rep.forEach(function(r){html+='<div class="row"><div><div class="rl">'+esc(r.description)+'</div><div class="rs">'+esc(vName(r.vehicleId))+' · '+fdt(r.date)+'</div>'+(r.provider?'<div style="font-size:11px;color:#64748B;margin-top:2px">'+esc(r.provider)+'</div>':'')+'</div><div class="ra"><div class="rr" style="color:#F59E0B">'+eur(r.cost)+'</div><button class="bsm d" data-a="delete" data-entity="repair" data-id="'+r.id+'">'+ic('trash',13)+'</button></div></div>';});
+  }
+  return html+'</div><button class="fab" data-a="open-add" data-entity="'+(st==='res'?'reservation':'repair')+'">+</button>';
+}
+
+// ─── Shell & render ────────────────────────────────────────────────────────
+function renderShell(){
+  var alerts=getAlerts(),crits=alerts.filter(function(a){return a.level==='crit'}).length;
+  q('#topbar').innerHTML='<div class="logo">🚗 Vroum !</div><div style="display:flex;gap:8px;align-items:center">'+(alerts.length?'<div class="apill" data-a="nav-home">'+ic('bell',13,'#FCA5A5')+(crits||alerts.length)+'</div>':'')+'<button class="sync-btn" data-a="refresh">'+ic('refresh',15,'#64748B')+'</button></div>';
+  var tabs=[['home','home','Accueil'],['fleet','car','Flotte'],['entretien','wrench','Entretien'],['fuel','fuel','Carburant'],['plus','more','Plus']];
+  q('#bnav').innerHTML=tabs.map(function(t){return'<div class="ntab '+(TAB===t[0]?'on':'')+'" data-a="nav-'+t[0]+'">'+ic(t[1],22,TAB===t[0]?'#00C896':'#64748B')+t[2]+(t[0]==='home'&&crits>0?'<div class="ndot"></div>':'')+'</div>';}).join('');
+}
+
+function renderContent(){
+  var html='';
+  if(TAB==='home')html=renderHome();
+  else if(TAB==='fleet')html=renderFleet();
+  else if(TAB==='entretien')html=renderEntretien();
+  else if(TAB==='fuel')html=renderCarburant();
+  else if(TAB==='plus')html=renderPlus();
+  q('#content').innerHTML=html;
+}
+
+function renderModal(){
+  var m=q('#modal');
+  if(MODAL){m.innerHTML=modalForm(MODAL);m.className='open';}
+  else{m.innerHTML='';m.className='';}
+}
+
+function render(){renderShell();renderContent();renderModal();}
+
+// ─── Save modal ────────────────────────────────────────────────────────────
+function readForm(){
+  var form=q('#modal-form');if(!form)return{};
+  var data={};
+  form.querySelectorAll('input,select').forEach(function(el){if(el.name)data[el.name]=el.value;});
+  return data;
+}
+
+async function saveModal(){
+  if(!MODAL)return;
+  var f=readForm(),e=MODAL.entity,id=MODAL.id;
+  var key=ENTITY_KEY[e];
+  function upd(arr){return arr.map(function(x){return x.id===id?Object.assign({},x,f):x})}
+  if(e==='vehicle'){f.mileage=parseInt(f.mileage)||0;f.year=parseInt(f.year)||2020;f.purchasePrice=parseFloat(f.purchasePrice)||0;if(id)D.vehicles=upd(D.vehicles);else D.vehicles.push(Object.assign({},f,{id:uid()}));}
+  else if(e==='driver'){if(id)D.drivers=upd(D.drivers);else D.drivers.push(Object.assign({},f,{id:uid()}));}
+  else if(e==='maintenance'){f.cost=parseFloat(f.cost)||0;f.mileageDone=parseInt(f.mileageDone)||0;f.nextMileage=parseInt(f.nextMileage)||0;if(id)D.maintenances=upd(D.maintenances);else D.maintenances.push(Object.assign({},f,{id:uid()}));}
+  else if(e==='insurance'){f.annualCost=parseFloat(f.annualCost)||0;if(id)D.insurances=upd(D.insurances);else D.insurances.push(Object.assign({},f,{id:uid()}));}
+  else if(e==='control'){f.cost=parseFloat(f.cost)||0;if(id)D.controls=upd(D.controls);else D.controls.push(Object.assign({},f,{id:uid()}));}
+  else if(e==='fuel'){f.liters=parseFloat(f.liters)||0;f.pricePerLiter=parseFloat(f.pricePerLiter)||0;f.totalCost=parseFloat(f.totalCost)||(f.liters*f.pricePerLiter);f.mileage=parseInt(f.mileage)||0;if(id)D.fuelLogs=upd(D.fuelLogs);else D.fuelLogs.push(Object.assign({},f,{id:uid()}));}
+  else if(e==='reservation'){f.status=f.status||'pending';if(id)D.reservations=upd(D.reservations);else D.reservations.push(Object.assign({},f,{id:uid()}));}
+  else if(e==='repair'){f.cost=parseFloat(f.cost)||0;f.mileage=parseInt(f.mileage)||0;if(id)D.repairs=upd(D.repairs);else D.repairs.push(Object.assign({},f,{id:uid()}));}
+  MODAL=null;render();
+  try{await sbSave(key,D[key]);showToast('✓ Enregistré');}
+  catch(err){showToast('⚠ '+err.message.slice(0,40));}
+}
+
+// ─── Events ────────────────────────────────────────────────────────────────
+function handleAction(a,ds){
+  if(a==='nav-home'||a.indexOf('nav-')===0){TAB=a==='nav-home'?'home':a.slice(4);render();return;}
+  if(a.indexOf('stab-')===0){var parts=a.slice(5).split('-'),v=parts.shift();STAB[v]=parts.join('-');renderContent();return;}
+  if(a==='open-add'){MODAL={type:'add',entity:ds.entity,id:null};renderModal();return;}
+  if(a==='open-edit'){MODAL={type:'edit',entity:ds.entity,id:ds.id};renderModal();return;}
+  if(a==='close-modal'){MODAL=null;renderModal();return;}
+  if(a==='save-modal'){saveModal();return;}
+  if(a==='refresh'){loadAndRender();return;}
+  if(a==='delete'){
+    if(!confirm('Supprimer ?'))return;
+    var e=ds.entity,id=ds.id,key=ENTITY_KEY[e];
+    if(D[key])D[key]=D[key].filter(function(x){return x.id!==id});
+    render();
+    sbSave(key,D[key]).then(function(){showToast('✓ Supprimé');}).catch(function(){showToast('⚠ Erreur réseau');});
+  }
+}
+
+document.addEventListener('click',function(e){
+  var el=e.target.closest('[data-a]');if(!el)return;
+  e.preventDefault();handleAction(el.getAttribute('data-a'),el.dataset);
+});
+document.addEventListener('click',function(e){if(e.target.id==='modal-inner')handleAction('close-modal',{});});
+
+// ─── Data loading ──────────────────────────────────────────────────────────
+async function loadAndRender(){
+  q('#loader').style.display='flex';
+  q('#loader').innerHTML='<div class="spin"></div><div class="load-txt">Connexion Supabase…</div>';
+  try{
+    if(!sb) throw new Error('Client Supabase non initialisé');
+    var rows=await sbLoad();
+    rows.forEach(function(row){if(D.hasOwnProperty(row.key)&&Array.isArray(row.value))D[row.key]=row.value;});
+    q('#loader').style.display='none';
+    render();
+  }catch(err){
+    q('#loader').innerHTML='<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px;line-height:1.6"><b>Erreur de connexion</b><br><br>'+err.message+'<br><br><button onclick="location.reload()" style="background:#00C896;color:#000;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer">Réessayer</button></div>';
+    q('#loader').style.display='flex';
+  }
+}
+
+// Auto-refresh quand l'app revient au premier plan
+document.addEventListener('visibilitychange',function(){if(!document.hidden)loadAndRender();});
+
+// ─── Access code ───────────────────────────────────────────────────────────
+function checkCode(){
+  var val=q('#code-input').value.trim().toUpperCase();
+  if(ACCESS_CODES.indexOf(val)>=0){
+    localStorage.setItem('vroum_code',val);
+    q('#code-screen').style.display='none';
+    q('#shell').style.display='flex';
+    initSupabase();
+    loadAndRender();
+  } else {
+    q('#code-err').textContent='Code incorrect';
+    setTimeout(function(){q('#code-err').textContent=''},2000);
+  }
+}
+
+q('#code-btn').addEventListener('click',checkCode);
+q('#code-input').addEventListener('keydown',function(e){if(e.key==='Enter')checkCode();});
+
+// ─── Init ──────────────────────────────────────────────────────────────────
+if(ACCESS_CODES.indexOf(localStorage.getItem('vroum_code'))>=0){
+  q('#code-screen').style.display='none';
+  q('#shell').style.display='flex';
+  initSupabase();
+  loadAndRender();
+}
+</script>
+</body>
+</html>
