@@ -129,30 +129,38 @@ input:focus,select:focus{border-color:var(--acc)}
 <!-- Toast -->
 <div id="toast">✓ Enregistré</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 'use strict';
 
 // ─── Config ────────────────────────────────────────────────────────────────
-var SB_URL = 'https://bpboyrmgluzvdowhfvoj.supabase.co';
-var SB_KEY = 'sb_publishable_ftmSpnvmhtjC45xn7JJNgA_QCymTSbN';
+var SURL = 'https://bpboyrmgluzvdowhfvoj.supabase.co/rest/v1';
+var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJwYm95cm1nbHV6dmRvd2hmdm9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTI5NDAsImV4cCI6MjA5MzQ2ODk0MH0.TDpw7cC3CCuG2lcWeo2QaVd2XdBXIZMyo5m1Dy6sc8M';
 var ACCESS_CODES = ['VROUM', 'VROUM2025', 'FLEET'];
-var sb = null; // Supabase client, initialized after SDK loads
 
-// ─── Supabase client ────────────────────────────────────────────────────────
-function initSupabase(){
-  sb = window.supabase.createClient(SB_URL, SB_KEY);
+// ─── Supabase REST ─────────────────────────────────────────────────────────
+function initSupabase(){ /* no-op, kept for compat */ }
+
+function sbH(extra){
+  return Object.assign({
+    'apikey': SKEY,
+    'Authorization': 'Bearer '+SKEY,
+    'Content-Type': 'application/json'
+  }, extra||{});
 }
 
 async function sbLoad(){
-  var res = await sb.from('vroum_data').select('key,value');
-  if(res.error) throw new Error(res.error.message);
-  return res.data;
+  var r = await fetch(SURL+'/vroum_data?select=key,value', {headers:sbH()});
+  if(!r.ok){ var t=await r.text(); throw new Error(t); }
+  return r.json();
 }
 
 async function sbSave(key, value){
-  var res = await sb.from('vroum_data').upsert({key:key, value:value});
-  if(res.error) throw new Error(res.error.message);
+  var r = await fetch(SURL+'/vroum_data', {
+    method: 'POST',
+    headers: sbH({'Prefer':'resolution=merge-duplicates,return=minimal'}),
+    body: JSON.stringify({key: key, value: value})
+  });
+  if(!r.ok){ var t=await r.text(); throw new Error(t); }
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -165,7 +173,7 @@ function q(sel){return document.querySelector(sel)}
 
 function showToast(msg){
   var t=q('#toast'); t.textContent=msg||'✓ Enregistré'; t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show')},2000);
+  setTimeout(function(){t.classList.remove('show')},3500);
 }
 
 // ─── State ─────────────────────────────────────────────────────────────────
@@ -354,21 +362,28 @@ function readForm(){
 }
 
 async function saveModal(){
-  if(!MODAL)return;
-  var f=readForm(),e=MODAL.entity,id=MODAL.id;
-  var key=ENTITY_KEY[e];
-  function upd(arr){return arr.map(function(x){return x.id===id?Object.assign({},x,f):x})}
-  if(e==='vehicle'){f.mileage=parseInt(f.mileage)||0;f.year=parseInt(f.year)||2020;f.purchasePrice=parseFloat(f.purchasePrice)||0;if(id)D.vehicles=upd(D.vehicles);else D.vehicles.push(Object.assign({},f,{id:uid()}));}
-  else if(e==='driver'){if(id)D.drivers=upd(D.drivers);else D.drivers.push(Object.assign({},f,{id:uid()}));}
-  else if(e==='maintenance'){f.cost=parseFloat(f.cost)||0;f.mileageDone=parseInt(f.mileageDone)||0;f.nextMileage=parseInt(f.nextMileage)||0;if(id)D.maintenances=upd(D.maintenances);else D.maintenances.push(Object.assign({},f,{id:uid()}));}
-  else if(e==='insurance'){f.annualCost=parseFloat(f.annualCost)||0;if(id)D.insurances=upd(D.insurances);else D.insurances.push(Object.assign({},f,{id:uid()}));}
-  else if(e==='control'){f.cost=parseFloat(f.cost)||0;if(id)D.controls=upd(D.controls);else D.controls.push(Object.assign({},f,{id:uid()}));}
-  else if(e==='fuel'){f.liters=parseFloat(f.liters)||0;f.pricePerLiter=parseFloat(f.pricePerLiter)||0;f.totalCost=parseFloat(f.totalCost)||(f.liters*f.pricePerLiter);f.mileage=parseInt(f.mileage)||0;if(id)D.fuelLogs=upd(D.fuelLogs);else D.fuelLogs.push(Object.assign({},f,{id:uid()}));}
-  else if(e==='reservation'){f.status=f.status||'pending';if(id)D.reservations=upd(D.reservations);else D.reservations.push(Object.assign({},f,{id:uid()}));}
-  else if(e==='repair'){f.cost=parseFloat(f.cost)||0;f.mileage=parseInt(f.mileage)||0;if(id)D.repairs=upd(D.repairs);else D.repairs.push(Object.assign({},f,{id:uid()}));}
-  MODAL=null;render();
-  try{await sbSave(key,D[key]);showToast('✓ Enregistré');}
-  catch(err){showToast('⚠ Erreur réseau');}
+  try{
+    if(!MODAL)return;
+    var f=readForm(),e=MODAL.entity,id=MODAL.id;
+    var key=ENTITY_KEY[e];
+    if(!key){showToast('⚠ Entité inconnue: '+e);return;}
+    function upd(arr){return arr.map(function(x){return x.id===id?Object.assign({},x,f):x})}
+    if(e==='vehicle'){f.mileage=parseInt(f.mileage)||0;f.year=parseInt(f.year)||2020;f.purchasePrice=parseFloat(f.purchasePrice)||0;if(id)D.vehicles=upd(D.vehicles);else D.vehicles.push(Object.assign({},f,{id:uid()}));}
+    else if(e==='driver'){if(id)D.drivers=upd(D.drivers);else D.drivers.push(Object.assign({},f,{id:uid()}));}
+    else if(e==='maintenance'){f.cost=parseFloat(f.cost)||0;f.mileageDone=parseInt(f.mileageDone)||0;f.nextMileage=parseInt(f.nextMileage)||0;if(id)D.maintenances=upd(D.maintenances);else D.maintenances.push(Object.assign({},f,{id:uid()}));}
+    else if(e==='insurance'){f.annualCost=parseFloat(f.annualCost)||0;if(id)D.insurances=upd(D.insurances);else D.insurances.push(Object.assign({},f,{id:uid()}));}
+    else if(e==='control'){f.cost=parseFloat(f.cost)||0;if(id)D.controls=upd(D.controls);else D.controls.push(Object.assign({},f,{id:uid()}));}
+    else if(e==='fuel'){f.liters=parseFloat(f.liters)||0;f.pricePerLiter=parseFloat(f.pricePerLiter)||0;f.totalCost=parseFloat(f.totalCost)||(f.liters*f.pricePerLiter);f.mileage=parseInt(f.mileage)||0;if(id)D.fuelLogs=upd(D.fuelLogs);else D.fuelLogs.push(Object.assign({},f,{id:uid()}));}
+    else if(e==='reservation'){f.status=f.status||'pending';if(id)D.reservations=upd(D.reservations);else D.reservations.push(Object.assign({},f,{id:uid()}));}
+    else if(e==='repair'){f.cost=parseFloat(f.cost)||0;f.mileage=parseInt(f.mileage)||0;if(id)D.repairs=upd(D.repairs);else D.repairs.push(Object.assign({},f,{id:uid()}));}
+    MODAL=null;render();
+    showToast('⏳ Enregistrement…');
+    await sbSave(key,D[key]);
+    showToast('✓ Enregistré');
+  }catch(err){
+    showToast('⚠ '+String(err).slice(0,60));
+  }
+}
 }
 
 // ─── Events ────────────────────────────────────────────────────────────────
@@ -398,14 +413,14 @@ document.addEventListener('click',function(e){if(e.target.id==='modal-inner')han
 // ─── Data loading ──────────────────────────────────────────────────────────
 async function loadAndRender(){
   q('#loader').style.display='flex';
+  q('#loader').innerHTML='<div class="spin"></div><div class="load-txt">Connexion Supabase…</div>';
   try{
     var rows=await sbLoad();
     rows.forEach(function(row){if(D.hasOwnProperty(row.key)&&Array.isArray(row.value))D[row.key]=row.value;});
     q('#loader').style.display='none';
     render();
   }catch(err){
-    q('#loader').style.display='none';
-    q('#loader').innerHTML='<div style="color:#EF4444;font-size:14px;text-align:center;padding:20px">Impossible de charger les données.<br>Vérifiez votre connexion.</div>';
+    q('#loader').innerHTML='<div style="color:#EF4444;font-size:13px;text-align:center;padding:20px;line-height:1.6"><b>Erreur de connexion</b><br><br>'+err.message+'<br><br><button onclick="location.reload()" style="background:#00C896;color:#000;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer">Réessayer</button></div>';
     q('#loader').style.display='flex';
   }
 }
