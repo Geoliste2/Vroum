@@ -129,32 +129,30 @@ input:focus,select:focus{border-color:var(--acc)}
 <!-- Toast -->
 <div id="toast">✓ Enregistré</div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 'use strict';
 
 // ─── Config ────────────────────────────────────────────────────────────────
-var SURL = 'https://bpboyrmgluzvdowhfvoj.supabase.co/rest/v1';
-var SKEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJwYm95cm1nbHV6dmRvd2hmdm9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTI5NDAsImV4cCI6MjA5MzQ2ODk0MH0.TDpw7cC3CCuG2lcWeo2QaVd2XdBXIZMyo5m1Dy6sc8M';
+var SB_URL = 'https://bpboyrmgluzvdowhfvoj.supabase.co';
+var SB_KEY = 'sb_publishable_ftmSpnvmhtjC45xn7JJNgA_QCymTSbN';
 var ACCESS_CODES = ['VROUM', 'VROUM2025', 'FLEET'];
+var sb = null; // Supabase client, initialized after SDK loads
 
-// ─── Supabase REST ─────────────────────────────────────────────────────────
-function sbH(){
-  return {'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json'};
+// ─── Supabase client ────────────────────────────────────────────────────────
+function initSupabase(){
+  sb = window.supabase.createClient(SB_URL, SB_KEY);
 }
 
 async function sbLoad(){
-  var r = await fetch(SURL+'/vroum_data?select=key,value', {headers:sbH()});
-  if(!r.ok) throw new Error('Erreur réseau '+r.status);
-  return r.json();
+  var res = await sb.from('vroum_data').select('key,value');
+  if(res.error) throw new Error(res.error.message);
+  return res.data;
 }
 
 async function sbSave(key, value){
-  var r = await fetch(SURL+'/vroum_data', {
-    method:'POST',
-    headers:Object.assign({},sbH(),{'Prefer':'resolution=merge-duplicates,return=minimal'}),
-    body:JSON.stringify({key:key, value:value})
-  });
-  if(!r.ok) throw new Error('Save error '+r.status);
+  var res = await sb.from('vroum_data').upsert({key:key, value:value});
+  if(res.error) throw new Error(res.error.message);
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -422,6 +420,7 @@ function checkCode(){
     localStorage.setItem('vroum_code',val);
     q('#code-screen').style.display='none';
     q('#shell').style.display='flex';
+    initSupabase();
     loadAndRender();
   } else {
     q('#code-err').textContent='Code incorrect';
@@ -436,6 +435,7 @@ q('#code-input').addEventListener('keydown',function(e){if(e.key==='Enter')check
 if(ACCESS_CODES.indexOf(localStorage.getItem('vroum_code'))>=0){
   q('#code-screen').style.display='none';
   q('#shell').style.display='flex';
+  initSupabase();
   loadAndRender();
 }
 </script>
