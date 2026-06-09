@@ -11,482 +11,335 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#080D1A;--card:#0F1729;--el:#162035;--border:#1D2D45;--acc:#00C896;--blue:#3B82F6;--warn:#F59E0B;--danger:#EF4444;--text:#E2E8F0;--muted:#64748B;--sub:#1E2D45}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;overflow:hidden}
-#shell{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
-#topbar{display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,20px)+10px) 16px 10px;background:rgba(10,16,32,.97);border-bottom:1px solid var(--border);flex-shrink:0}
-#content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(24px + env(safe-area-inset-bottom,0px))}
-#bnav{display:flex;background:rgba(10,16,32,.97);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom,0px);flex-shrink:0}
+#app{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+#topbar{display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,20px)+10px) 16px 10px;background:#0A1020;border-bottom:1px solid var(--border);flex-shrink:0}
+#content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px}
+#bnav{display:flex;background:#0A1020;border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom,0px);flex-shrink:0}
 .logo{font-size:20px;font-weight:900;color:var(--acc)}
-.sync-status{font-size:11px;padding:4px 10px;border-radius:12px;font-weight:600}
-.sync-ok{background:rgba(0,200,150,.15);color:var(--acc)}
-.sync-err{background:rgba(239,68,68,.15);color:var(--danger)}
-.sync-pending{background:rgba(245,158,11,.15);color:var(--warn)}
-.ntab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;cursor:pointer;font-size:10px;font-weight:600;color:var(--muted);position:relative;user-select:none}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 7px;cursor:pointer;font-size:10px;font-weight:600;color:var(--muted)}
 .ntab.on{color:var(--acc)}
-.ntab svg{width:22px;height:22px}
-.ndot{position:absolute;top:6px;right:calc(50% - 15px);width:7px;height:7px;background:var(--danger);border-radius:50%;border:1.5px solid var(--bg)}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px}
-.ctit{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
 .kg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
-.kl{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px}
-.kv{font-size:24px;font-weight:800;color:var(--text);line-height:1}
+.kl{font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.kv{font-size:26px;font-weight:800;line-height:1}
 .ks{font-size:11px;color:var(--muted);margin-top:5px}
-.ar{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--sub)}
-.ar:last-child{border-bottom:none}
-.ad{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.ad.crit{background:var(--danger)}.ad.warn{background:var(--warn)}.ad.info{background:var(--blue)}
-.at{font-size:13px;color:var(--text);line-height:1.3}.asub{font-size:11px;color:var(--muted);margin-top:2px}
-.vc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:10px}
-.plate{font-size:17px;font-weight:800;color:var(--text);letter-spacing:.5px}
-.vmod{font-size:13px;color:var(--muted);margin-top:2px}
-.vs{display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
-.vi{font-size:11px;color:var(--muted)}.vi b{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:1px}
-.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
-.bg{background:rgba(0,200,150,.12);color:var(--acc)}.bb{background:rgba(59,130,246,.12);color:var(--blue)}
-.ba{background:rgba(245,158,11,.12);color:var(--warn)}.br{background:rgba(239,68,68,.12);color:var(--danger)}
-.bx{background:var(--el);color:var(--muted)}
-.row{display:flex;align-items:flex-start;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--sub)}
+.row{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--sub)}
 .row:last-child{border-bottom:none}
-.rl{font-size:13px;font-weight:600;color:var(--text)}.rs{font-size:11px;color:var(--muted);margin-top:2px}
-.rr{font-size:13px;font-weight:700;flex-shrink:0;margin-left:6px;margin-top:2px}
-.ra{display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:6px}
-.fab{position:fixed;bottom:calc(82px + env(safe-area-inset-bottom,0px));right:20px;width:54px;height:54px;border-radius:27px;background:var(--acc);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,200,150,.4);cursor:pointer;z-index:30;border:none;font-size:28px;color:#000}
+.rl{font-size:13px;font-weight:600;color:var(--text)}
+.rs{font-size:11px;color:var(--muted);margin-top:2px}
+.ra{display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:8px}
+.badge{display:inline-flex;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.bg{background:rgba(0,200,150,.12);color:var(--acc)}.bb{background:rgba(59,130,246,.12);color:var(--blue)}
+.ba{background:rgba(245,158,11,.12);color:var(--warn)}.br{background:rgba(239,68,68,.12);color:var(--danger)}.bx{background:var(--el);color:var(--muted)}
+.fab{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom,0px));right:20px;width:54px;height:54px;border-radius:50%;background:var(--acc);border:none;font-size:28px;color:#000;cursor:pointer;box-shadow:0 4px 16px rgba(0,200,150,.4);z-index:20}
 .stabs{display:flex;gap:2px;background:var(--el);border-radius:10px;padding:3px;margin-bottom:14px}
-.stab{flex:1;text-align:center;padding:7px 4px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)}
+.stab{flex:1;text-align:center;padding:7px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted)}
 .stab.on{background:var(--acc);color:#000}
+.empty{text-align:center;padding:40px 0;color:var(--muted)}
 /* Modal */
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:50;display:flex;align-items:flex-end}
-.sh{background:var(--card);border-radius:24px 24px 0 0;width:100%;max-height:92dvh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
-.shhd{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 4px}
-.shtop{display:flex;align-items:center;justify-content:space-between;padding:12px 20px 10px;border-bottom:1px solid var(--border)}
-.shtt{font-size:17px;font-weight:700;color:var(--text)}
-.shb{padding:16px 20px}
-.shf{padding:12px 20px;display:flex;gap:10px;border-top:1px solid var(--border)}
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:50;display:flex;align-items:flex-end}
+.sheet{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-height:90dvh;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,20px)}
+.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 10px;border-bottom:1px solid var(--border)}
+.sheet-title{font-size:17px;font-weight:700}
+.sheet-body{padding:16px 20px}
+.sheet-foot{display:flex;gap:10px;padding:12px 20px;border-top:1px solid var(--border)}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
 .fg label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-input,select{background:var(--el);border:1px solid var(--border);border-radius:10px;padding:12px 13px;font-size:16px;color:var(--text);font-family:inherit;width:100%;outline:none;-webkit-appearance:none;appearance:none}
+input,select{background:var(--el);border:1px solid var(--border);border-radius:10px;padding:12px 13px;font-size:16px;color:var(--text);font-family:inherit;width:100%;outline:none;-webkit-appearance:none}
 input:focus,select:focus{border-color:var(--acc)}
-.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:inherit;flex:1;color:var(--text)}
-.btn.p{background:var(--acc);color:#000}.btn.g{background:var(--el)}
-.bsm{padding:7px 10px;font-size:12px;border-radius:8px;display:inline-flex;align-items:center;gap:4px;border:1px solid var(--border);background:var(--el);color:var(--text);cursor:pointer;font-family:inherit}
-.bsm.d{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--danger)}
-.legend{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
-.lgi{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)}
-.lgd{width:8px;height:8px;border-radius:2px;display:inline-block}
-.empty{text-align:center;padding:32px 0;color:var(--muted);font-size:14px}
-/* Code screen */
-#code-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;z-index:200}
-.code-logo{font-size:48px;margin-bottom:16px}
-.code-title{font-size:26px;font-weight:900;color:var(--acc);margin-bottom:8px}
-.code-sub{font-size:14px;color:var(--muted);margin-bottom:40px}
-.code-input{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:14px 20px;font-size:22px;color:var(--text);font-family:inherit;width:100%;max-width:300px;outline:none;text-align:center;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
-.code-input:focus{border-color:var(--acc)}
-.code-btn{background:var(--acc);color:#000;border:none;border-radius:14px;padding:14px;font-size:16px;font-weight:700;width:100%;max-width:300px;cursor:pointer;font-family:inherit}
-.code-err{color:var(--danger);font-size:13px;margin-top:8px;min-height:20px}
-/* Loader */
-#loader{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:16px}
-.spin{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* Banner (persistent message) */
-#banner{position:fixed;top:calc(env(safe-area-inset-top,20px)+52px);left:0;right:0;text-align:center;z-index:90;pointer-events:none}
-#banner div{display:inline-block;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:700;opacity:0;transition:opacity .3s}
-#banner div.show{opacity:1}
-#modal{display:none}
-#modal.open{display:flex}
+.btn{flex:1;padding:13px;border-radius:12px;font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit}
+.btn-p{background:var(--acc);color:#000}
+.btn-g{background:var(--el);color:var(--text)}
+.bsm{padding:6px 10px;border-radius:8px;font-size:12px;border:1px solid var(--border);background:var(--el);color:var(--text);cursor:pointer;font-family:inherit}
+.bsm-d{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--danger)}
+/* Code */
+#code-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;padding:32px;z-index:100}
+/* Notif */
+#notif{position:fixed;top:calc(env(safe-area-inset-top,20px)+56px);left:16px;right:16px;z-index:99;text-align:center;pointer-events:none}
+.notif-inner{display:inline-block;padding:10px 20px;border-radius:16px;font-size:14px;font-weight:700;opacity:0;transition:opacity .25s;max-width:320px}
+.notif-inner.show{opacity:1}
 </style>
 </head>
 <body>
+
 <div id="code-screen">
-  <div class="code-logo">🚗</div>
-  <div class="code-title">Vroum !</div>
-  <div class="code-sub">Code d'accès requis</div>
-  <input class="code-input" id="code-input" type="text" placeholder="CODE" autocomplete="off" autocorrect="off" spellcheck="false"/>
-  <button class="code-btn" id="code-btn">Accéder</button>
-  <div class="code-err" id="code-err"></div>
+  <div style="font-size:52px;margin-bottom:12px">🚗</div>
+  <div style="font-size:28px;font-weight:900;color:var(--acc);margin-bottom:8px">Vroum !</div>
+  <div style="font-size:14px;color:var(--muted);margin-bottom:32px">Entrez le code d'accès</div>
+  <input id="code-in" style="background:var(--card);border:2px solid var(--border);border-radius:14px;padding:14px;font-size:22px;color:var(--text);width:100%;max-width:280px;text-align:center;letter-spacing:3px;text-transform:uppercase;font-family:inherit;outline:none;margin-bottom:12px" type="text" placeholder="CODE" autocomplete="off" autocorrect="off" spellcheck="false"/>
+  <button id="code-btn" style="background:var(--acc);color:#000;border:none;border-radius:14px;padding:14px;font-size:16px;font-weight:700;width:100%;max-width:280px;cursor:pointer;font-family:inherit">Accéder</button>
+  <div id="code-err" style="color:var(--danger);font-size:13px;margin-top:10px;min-height:20px"></div>
 </div>
-<div id="loader"><div class="spin"></div><div style="font-size:14px;color:#64748B">Chargement…</div></div>
-<div id="shell" style="display:none">
-  <div id="topbar"></div>
+
+<div id="app" style="display:none">
+  <div id="topbar">
+    <div class="logo">🚗 Vroum !</div>
+    <div id="sync-info" style="font-size:11px;color:var(--muted)"></div>
+  </div>
   <div id="content"></div>
   <div id="bnav"></div>
 </div>
-<div id="banner"><div id="banner-msg"></div></div>
-<div id="modal"></div>
+
+<div id="notif"><div class="notif-inner" id="notif-msg"></div></div>
+<div id="modal-root"></div>
 
 <script>
-'use strict';
-
-// ─── Config ────────────────────────────────────────────────────────────────
+// ── Config ──────────────────────────────────────────────────────
 var CODES = ['VROUM','VROUM2025','FLEET'];
 var SB_URL = 'https://bpboyrmgluzvdowhfvoj.supabase.co/rest/v1';
 var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJwYm95cm1nbHV6dmRvd2hmdm9qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc4OTI5NDAsImV4cCI6MjA5MzQ2ODk0MH0.TDpw7cC3CCuG2lcWeo2QaVd2XdBXIZMyo5m1Dy6sc8M';
-var LS_KEY = 'vroum_v1';
 
-// ─── Supabase ──────────────────────────────────────────────────────────────
-function sbHeaders(){
-  return {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
-}
-async function sbLoad(){
-  var r = await fetch(SB_URL+'/vroum_data?select=key,value',{headers:sbHeaders()});
-  if(!r.ok) throw new Error('HTTP '+r.status+' '+await r.text());
-  return r.json();
-}
-async function sbUpsert(key,value){
-  var r = await fetch(SB_URL+'/vroum_data',{
-    method:'POST',
-    headers:Object.assign({},sbHeaders(),{'Prefer':'resolution=merge-duplicates,return=minimal'}),
-    body:JSON.stringify({key:key,value:value})
-  });
-  if(!r.ok) throw new Error('HTTP '+r.status+' '+await r.text());
-}
-
-// ─── State ─────────────────────────────────────────────────────────────────
-var D = {vehicles:[],drivers:[],insurances:[],controls:[],maintenances:[],repairs:[],fuelLogs:[],reservations:[]};
-var TAB = 'home';
-var STAB = {fleet:'v',entretien:'m',plus:'res'};
-var MODAL = null;
-var SB_OK = false; // true if Supabase is reachable
-
-function lsSave(){ try{localStorage.setItem(LS_KEY,JSON.stringify(D));}catch(e){} }
-function lsLoad(){ try{var s=localStorage.getItem(LS_KEY);if(s)D=JSON.parse(s);}catch(e){} }
-
-// ─── Banner ────────────────────────────────────────────────────────────────
-var bannerTimer = null;
-function showBanner(msg,type){
-  var el = document.getElementById('banner-msg');
-  var colors = {ok:'background:rgba(0,200,150,.9);color:#000',err:'background:rgba(239,68,68,.9);color:#fff',warn:'background:rgba(245,158,11,.9);color:#000'};
-  el.style.cssText = (colors[type]||colors.ok)+';border-radius:20px';
+// ── Notification ────────────────────────────────────────────────
+var _nt = null;
+function notif(msg, ok) {
+  var el = document.getElementById('notif-msg');
   el.textContent = msg;
+  el.style.background = ok ? 'rgba(0,200,150,.95)' : 'rgba(239,68,68,.95)';
+  el.style.color = ok ? '#000' : '#fff';
   el.classList.add('show');
-  if(bannerTimer) clearTimeout(bannerTimer);
-  bannerTimer = setTimeout(function(){el.classList.remove('show');},4000);
+  if (_nt) clearTimeout(_nt);
+  _nt = setTimeout(function(){ el.classList.remove('show'); }, 4000);
 }
 
-// ─── Helpers ───────────────────────────────────────────────────────────────
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function eur(n){return n!=null?Number(n).toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}):'—'}
-function fdt(s){return s?new Date(s).toLocaleDateString('fr-FR'):'—'}
-function daysTo(s){return s?Math.ceil((new Date(s)-Date.now())/86400000):9999}
-function q(sel){return document.querySelector(sel)}
-function vName(id){var v=D.vehicles.find(function(x){return x.id===id});return v?v.plate+' '+v.brand:id}
-function dName(id){var d=D.drivers.find(function(x){return x.id===id});return d?d.name:'—'}
-function dcol(d){var x=daysTo(d);return x<0?'#EF4444':x<30?'#F59E0B':'#94A3B8'}
+// ── State ───────────────────────────────────────────────────────
+var D = { vehicles:[], drivers:[], insurances:[], controls:[], maintenances:[], repairs:[], fuelLogs:[], reservations:[] };
+var TAB = 'home';
+var STAB = { fleet:'v', entretien:'m', plus:'res' };
 
-// ─── Icons ─────────────────────────────────────────────────────────────────
-var IC = {
-  home:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
-  car:'<path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v9a2 2 0 0 1-2 2h-2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="14.5" cy="17.5" r="2.5"/>',
-  wrench:'<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
-  fuel:'<path d="M3 22V2l7 4 7-4v20"/><line x1="3" y1="12" x2="17" y2="12"/>',
-  more:'<circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/><circle cx="5" cy="12" r="1.5"/>',
-  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
-  x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
-  check:'<polyline points="20 6 9 17 4 12"/>',
-  bell:'<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>',
-  refresh:'<polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 0 .49-4.51"/>',
-  edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
-  trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>'
-};
-function ic(name,size,color){return '<svg width="'+(size||22)+'" height="'+(size||22)+'" viewBox="0 0 24 24" fill="none" stroke="'+(color||'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(IC[name]||'')+'</svg>';}
+function save(key) {
+  try { localStorage.setItem('vroum_'+key, JSON.stringify(D[key])); } catch(e){}
+  // Async Supabase sync
+  fetch(SB_URL+'/vroum_data', {
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+    body:JSON.stringify({key:key,value:D[key]})
+  }).catch(function(){});
+}
 
-// ─── Alerts ────────────────────────────────────────────────────────────────
-function getAlerts(){
+function load() {
+  // Load from localStorage first (instant)
+  Object.keys(D).forEach(function(k) {
+    try { var v=localStorage.getItem('vroum_'+k); if(v) D[k]=JSON.parse(v); } catch(e){}
+  });
+  // Then try Supabase (background sync)
+  fetch(SB_URL+'/vroum_data?select=key,value', {
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+  }).then(function(r){ return r.ok?r.json():Promise.reject(r.status); })
+  .then(function(rows){
+    rows.forEach(function(row){ if(D.hasOwnProperty(row.key)&&Array.isArray(row.value)&&row.value.length>0) D[row.key]=row.value; });
+    Object.keys(D).forEach(function(k){ try{localStorage.setItem('vroum_'+k,JSON.stringify(D[k]));}catch(e){} });
+    document.getElementById('sync-info').textContent = '☁ Sync';
+    render();
+  }).catch(function(){ document.getElementById('sync-info').textContent = '📱 Local'; });
+}
+
+// ── Helpers ─────────────────────────────────────────────────────
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2); }
+function eur(n){ return n!=null?Number(n).toLocaleString('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}):'—'; }
+function fdt(s){ return s?new Date(s).toLocaleDateString('fr-FR'):'—'; }
+function daysTo(s){ return s?Math.ceil((new Date(s)-Date.now())/86400000):9999; }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function vname(id){ var v=D.vehicles.find(function(x){return x.id===id;}); return v?v.plate+' '+v.brand:id; }
+function dname(id){ var d=D.drivers.find(function(x){return x.id===id;}); return d?d.name:'—'; }
+function sbadge(s){ var m={active:'bg Actif',available:'bb Dispo',maintenance:'ba Entretien',inactive:'bx Inactif',confirmed:'bg Confirmé',pending:'ba En attente',canceled:'br Annulé'}; var p=(m[s]||'bx '+s).split(' '); return '<span class="badge '+p[0]+'">'+esc(p.slice(1).join(' '))+'</span>'; }
+
+// ── Views ───────────────────────────────────────────────────────
+function alerts() {
   var a=[];
-  D.insurances.forEach(function(i){var v=D.vehicles.find(function(x){return x.id===i.vehicleId});var n=daysTo(i.endDate);if(n<=30)a.push({id:'i'+i.id,level:n<=7?'crit':'warn',text:'Assurance '+(v?v.plate:'?')+' dans '+n+'j',sub:i.provider+' · '+fdt(i.endDate)});});
-  D.controls.forEach(function(c){var v=D.vehicles.find(function(x){return x.id===c.vehicleId});var n=daysTo(c.nextDate);if(n<=60)a.push({id:'c'+c.id,level:n<=14?'crit':'warn',text:'CT '+(v?v.plate:'?')+' dans '+n+'j',sub:'Dernier : '+fdt(c.date)});});
-  D.maintenances.forEach(function(m){var v=D.vehicles.find(function(x){return x.id===m.vehicleId});if(!v)return;var dd=daysTo(m.nextDate),kl=(m.nextMileage||0)-v.mileage;if(dd<=30||kl<=1000)a.push({id:'m'+m.id,level:(dd<=0||kl<=0)?'crit':'warn',text:'Entretien '+v.plate+(dd<=0?' en retard':' dans '+dd+'j'),sub:m.type+' · '+fdt(m.nextDate)});});
-  D.vehicles.filter(function(v){return v.status==='active'}).forEach(function(v){var ts=D.fuelLogs.filter(function(f){return f.vehicleId===v.id}).map(function(f){return+new Date(f.date)});D.reservations.filter(function(r){return r.vehicleId===v.id&&new Date(r.endDate)<new Date()}).forEach(function(r){ts.push(+new Date(r.endDate))});if(!ts.length){a.push({id:'idle'+v.id,level:'info',text:v.plate+' — aucune activité',sub:'Sous-utilisé'});return;}var ago=Math.floor((Date.now()-Math.max.apply(null,ts))/86400000);if(ago>45)a.push({id:'idle'+v.id,level:'info',text:v.plate+' inactif '+ago+'j',sub:'Sous-utilisation'});});
-  return a.sort(function(a,b){return({crit:0,warn:1,info:2}[a.level]||2)-({crit:0,warn:1,info:2}[b.level]||2)});
+  D.insurances.forEach(function(i){ var v=D.vehicles.find(function(x){return x.id===i.vehicleId;}); var n=daysTo(i.endDate); if(n<=30)a.push({text:'Assurance '+(v?v.plate:'?')+' dans '+n+'j',c:'warn'}); });
+  D.controls.forEach(function(c){ var v=D.vehicles.find(function(x){return x.id===c.vehicleId;}); var n=daysTo(c.nextDate); if(n<=60)a.push({text:'CT '+(v?v.plate:'?')+' dans '+n+'j',c:n<=14?'danger':'warn'}); });
+  D.maintenances.forEach(function(m){ var v=D.vehicles.find(function(x){return x.id===m.vehicleId;}); if(!v)return; var d=daysTo(m.nextDate); if(d<=30)a.push({text:'Entretien '+v.plate+(d<=0?' en retard':' dans '+d+'j'),c:d<=0?'danger':'warn'}); });
+  return a;
 }
 
-// ─── Charts ────────────────────────────────────────────────────────────────
-function getMonthlyData(){return Array.from({length:6},function(_,i){var dt=new Date();dt.setMonth(dt.getMonth()-(5-i));var y=dt.getFullYear(),m=dt.getMonth();function inM(f){var x=new Date(f.date);return x.getFullYear()===y&&x.getMonth()===m}return{name:dt.toLocaleDateString('fr-FR',{month:'short'}),Carb:Math.round(D.fuelLogs.filter(inM).reduce(function(s,f){return s+f.totalCost},0)),Entr:Math.round(D.maintenances.filter(inM).reduce(function(s,m){return s+m.cost},0)),Rep:Math.round(D.repairs.filter(inM).reduce(function(s,r){return s+r.cost},0))};});}
-
-function groupedBarSVG(data){var keys=['Carb','Entr','Rep'],colors=['#3B82F6','#00C896','#F59E0B'];var max=Math.max.apply(null,data.map(function(d){return Math.max(d.Carb||0,d.Entr||0,d.Rep||0)}))||1;var W=320,H=150,pb=22,pt=8,pl=8,cw=W-pl*2,ch=H-pb-pt,grpW=cw/data.length,bw=Math.floor(grpW*0.22);var bars=data.map(function(d,i){return keys.map(function(k,j){var bh=Math.max((d[k]||0)>0?2:0,Math.floor(((d[k]||0)/max)*ch));var x=pl+i*grpW+j*(bw+2)+(grpW-keys.length*(bw+2))/2;return'<rect x="'+x+'" y="'+(pt+ch-bh)+'" width="'+bw+'" height="'+bh+'" fill="'+colors[j]+'" rx="2"/>';}).join('')+'<text x="'+(pl+i*grpW+grpW/2)+'" y="'+(H-5)+'" text-anchor="middle" font-size="9" fill="#64748B">'+esc(d.name)+'</text>';}).join('');return'<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'">'+bars+'</svg>';}
-
-function simpleBarSVG(data,key,color){var vals=data.map(function(d){return d[key]||0}),max=Math.max.apply(null,vals)||1;var W=320,H=130,pb=22,pt=8,pl=8,cw=W-pl*2,ch=H-pb-pt,bw=Math.floor((cw/data.length)*0.55),gap=cw/data.length;var bars=data.map(function(d,i){var bh=Math.max(2,Math.floor(((d[key]||0)/max)*ch));var x=pl+i*gap+(gap-bw)/2;return'<rect x="'+x+'" y="'+(pt+ch-bh)+'" width="'+bw+'" height="'+bh+'" fill="'+color+'" rx="2"/><text x="'+(pl+i*gap+gap/2)+'" y="'+(H-5)+'" text-anchor="middle" font-size="9" fill="#64748B">'+esc(d.name)+'</text>';}).join('');return'<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="'+H+'">'+bars+'</svg>';}
-
-// ─── Badge ─────────────────────────────────────────────────────────────────
-var SBMAP={active:'bg Actif',available:'bb Dispo',maintenance:'ba Entretien',inactive:'bx Inactif',confirmed:'bg Confirmé',pending:'ba En attente',canceled:'br Annulé'};
-function sbadge(s){var p=(SBMAP[s]||'bx '+s).split(' ');return'<span class="badge '+p[0]+'">'+esc(p.slice(1).join(' '))+'</span>';}
-
-// ─── Form helpers ──────────────────────────────────────────────────────────
-function fi(lbl,name,val,type,ph){return'<div class="fg"><label>'+lbl+'</label><input type="'+(type||'text')+'" name="'+name+'" value="'+esc(val||'')+'" placeholder="'+esc(ph||'')+'"/></div>';}
-function fs(lbl,name,val,opts){var h='<div class="fg"><label>'+lbl+'</label><select name="'+name+'"><option value="">— Choisir —</option>';opts.forEach(function(o){var v=o.v||o,l=o.l||o;h+='<option value="'+esc(v)+'"'+(val==v?' selected':'')+'>'+esc(l)+'</option>';});return h+'</select></div>';}
-var vOpts=function(){return D.vehicles.map(function(v){return{v:v.id,l:v.plate+' — '+v.brand+' '+v.model}});};
-var dOpts=function(){return D.drivers.map(function(d){return{v:d.id,l:d.name}});};
-
-// ─── Modal form HTML ───────────────────────────────────────────────────────
-function buildModalForm(){
-  if(!MODAL) return '';
-  var e=MODAL.entity, id=MODAL.id;
-  var KEY_MAP={vehicle:'vehicles',driver:'drivers',maintenance:'maintenances',insurance:'insurances',control:'controls',fuel:'fuelLogs',reservation:'reservations',repair:'repairs'};
-  var arr=D[KEY_MAP[e]];
-  var i=(arr&&id)?arr.find(function(x){return x.id===id;})||{}:{};
-  var title='', body='';
-  switch(e){
-    case 'vehicle': title=id?'Modifier':'Nouveau véhicule';
-      body=fi('Immatriculation','plate',i.plate,'text','AB-123-CD')+fi('Marque','brand',i.brand)+fi('Modèle','model',i.model)+fi('Année','year',i.year,'number')+fi('Kilométrage','mileage',i.mileage,'number')+fs('Énergie','fuelType',i.fuelType,['Diesel','Essence','Hybride','Électrique','GPL'])+fs('Statut','status',i.status,[{v:'active',l:'Actif'},{v:'available',l:'Disponible'},{v:'maintenance',l:'En entretien'},{v:'inactive',l:'Inactif'}])+fs('Conducteur','driverId',i.driverId,dOpts())+fi("Date d'achat",'purchaseDate',i.purchaseDate,'date')+fi("Prix d'achat (€)",'purchasePrice',i.purchasePrice,'number');
-      break;
-    case 'driver': title=id?'Modifier':'Nouveau conducteur';
-      body=fi('Nom','name',i.name)+fi('N° Permis','license',i.license)+fi('Expiration','licenseExpiry',i.licenseExpiry,'date')+fi('Téléphone','phone',i.phone,'tel')+fi('Email','email',i.email,'email');
-      break;
-    case 'maintenance': title='Entretien';
-      body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Type','type',i.type,'text','Vidange…')+fi('Date','date',i.date,'date')+fi('Km effectué','mileageDone',i.mileageDone,'number')+fi('Coût (€)','cost',i.cost,'number')+fi('Prestataire','provider',i.provider)+fi('Prochain RDV','nextDate',i.nextDate,'date')+fi('Prochain Km','nextMileage',i.nextMileage,'number');
-      break;
-    case 'insurance': title='Assurance';
-      body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Assureur','provider',i.provider)+fi('N° Police','policy',i.policy)+fs('Type','type',i.type,['Tous risques','Tiers','Flotte'])+fi('Début','startDate',i.startDate,'date')+fi('Fin','endDate',i.endDate,'date')+fi('Coût annuel (€)','annualCost',i.annualCost,'number');
-      break;
-    case 'control': title='Contrôle technique';
-      body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Date CT','date',i.date,'date')+fi('Prochain CT','nextDate',i.nextDate,'date')+fs('Résultat','result',i.result,['Favorable','Défavorable'])+fi('Coût (€)','cost',i.cost,'number');
-      break;
-    case 'fuel': title='Saisir un plein';
-      body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Date','date',i.date||new Date().toISOString().slice(0,10),'date')+fi('Litres','liters',i.liters,'number','52')+fi('Prix/L (€)','pricePerLiter',i.pricePerLiter,'number','1.72')+fi('Total (€)','totalCost',i.totalCost,'number','Auto si vide')+fi('Kilométrage','mileage',i.mileage,'number');
-      break;
-    case 'reservation': title='Réservation';
-      body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fs('Conducteur','driverId',i.driverId,dOpts())+fi('Départ','startDate',i.startDate,'date')+fi('Retour','endDate',i.endDate,'date')+fi('Motif','purpose',i.purpose,'text','Déplacement…')+fs('Statut','status',i.status||'pending',[{v:'pending',l:'En attente'},{v:'confirmed',l:'Confirmé'},{v:'canceled',l:'Annulé'}]);
-      break;
-    case 'repair': title='Réparation';
-      body=fs('Véhicule','vehicleId',i.vehicleId,vOpts())+fi('Date','date',i.date||new Date().toISOString().slice(0,10),'date')+fi('Description','description',i.description,'text','Remplacement…')+fi('Prestataire','provider',i.provider)+fi('Coût (€)','cost',i.cost,'number')+fi('Kilométrage','mileage',i.mileage,'number');
-      break;
-    default: return '';
-  }
-  return '<div class="ov" id="modal-overlay"><div class="sh"><div class="shhd"></div><div class="shtop"><span class="shtt">'+title+'</span><button type="button" class="bsm" id="btn-close-modal">'+ic('x',20)+'</button></div><div class="shb"><form id="modal-form" onsubmit="return false;">'+body+'</form></div><div class="shf"><button type="button" class="btn g" id="btn-cancel-modal">Annuler</button><button type="button" class="btn p" id="btn-save-modal">'+ic('check',16,'#000')+'Enregistrer</button></div></div></div>';
+function homeView() {
+  var al=alerts(), crits=al.filter(function(x){return x.c==='danger';}).length;
+  var now=new Date(), m=now.getMonth(), y=now.getFullYear();
+  var mc=D.fuelLogs.concat(D.maintenances).filter(function(f){var x=new Date(f.date);return x.getMonth()===m&&x.getFullYear()===y;}).reduce(function(s,f){return s+(f.totalCost||f.cost||0);},0);
+  return '<div class="kg">'
+    +'<div class="kpi"><div class="kl">Véhicules</div><div class="kv">'+D.vehicles.length+'</div><div class="ks">'+D.vehicles.filter(function(v){return v.status==='active';}).length+' actifs</div></div>'
+    +'<div class="kpi"><div class="kl">Alertes</div><div class="kv" style="color:'+(crits?'#EF4444':al.length?'#F59E0B':'#00C896')+'">'+al.length+'</div><div class="ks">'+crits+' critiques</div></div>'
+    +'<div class="kpi"><div class="kl">Ce mois</div><div class="kv" style="font-size:18px">'+eur(mc)+'</div><div class="ks">Carb + entretien</div></div>'
+    +'<div class="kpi"><div class="kl">Réservations</div><div class="kv">'+D.reservations.filter(function(r){return new Date(r.startDate)>=new Date()&&r.status!=='canceled';}).length+'</div><div class="ks">À venir</div></div>'
+    +'</div>'
+    +'<div class="card"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Alertes</div>'
+    +(al.length?al.map(function(a){return'<div class="row"><div class="rl">'+esc(a.text)+'</div></div>';}).join(''):'<div class="empty">✓ Tout est OK</div>')
+    +'</div>';
 }
 
-// ─── Views ─────────────────────────────────────────────────────────────────
-function viewHome(){
-  var alerts=getAlerts(),crits=alerts.filter(function(a){return a.level==='crit'}).length;
-  var upcoming=D.reservations.filter(function(r){return new Date(r.startDate)>=new Date()&&r.status!=='canceled'}).length;
-  var now=new Date(),m=now.getMonth(),y=now.getFullYear();
-  var mc=D.fuelLogs.concat(D.maintenances).filter(function(f){var x=new Date(f.date);return x.getMonth()===m&&x.getFullYear()===y}).reduce(function(s,f){return s+(f.totalCost||f.cost||0)},0);
-  var h='';
-  if(crits>0) h+='<div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:#FCA5A5;display:flex;align-items:center;gap:8px">'+ic('bell',15,'#FCA5A5')+crits+' alerte'+(crits>1?'s':'')+'</div>';
-  h+='<div class="kg"><div class="kpi"><div class="kl">Véhicules</div><div class="kv">'+D.vehicles.length+'</div><div class="ks">'+D.vehicles.filter(function(v){return v.status==='active'}).length+' actifs</div></div><div class="kpi"><div class="kl">Alertes</div><div class="kv" style="color:'+(crits>0?'#EF4444':alerts.length>0?'#F59E0B':'#00C896')+'">'+alerts.length+'</div><div class="ks">'+crits+' critiques</div></div><div class="kpi"><div class="kl">Ce mois</div><div class="kv" style="font-size:16px">'+eur(mc)+'</div><div class="ks">Carb.+entretien</div></div><div class="kpi"><div class="kl">Réservations</div><div class="kv">'+upcoming+'</div><div class="ks">À venir</div></div></div>';
-  h+='<div class="card"><div class="ctit">Coûts 6 mois</div>'+groupedBarSVG(getMonthlyData())+'<div class="legend"><div class="lgi"><span class="lgd" style="background:#3B82F6"></span>Carburant</div><div class="lgi"><span class="lgd" style="background:#00C896"></span>Entretien</div><div class="lgi"><span class="lgd" style="background:#F59E0B"></span>Réparation</div></div></div>';
-  h+='<div class="card"><div class="ctit">Alertes</div>'+(alerts.length?alerts.map(function(a){return'<div class="ar"><div class="ad '+a.level+'"></div><div><div class="at">'+esc(a.text)+'</div><div class="asub">'+esc(a.sub)+'</div></div></div>';}).join(''):'<div class="empty">✓ Tout est OK</div>')+'</div>';
-  return h;
-}
-
-function viewFleet(){
+function fleetView() {
   var st=STAB.fleet;
-  var h='<div class="stabs"><div class="stab '+(st==='v'?'on':'')+'" data-a="stab" data-key="fleet" data-val="v">Véhicules</div><div class="stab '+(st==='d'?'on':'')+'" data-a="stab" data-key="fleet" data-val="d">Conducteurs</div></div>';
+  var h='<div class="stabs"><div class="stab '+(st==='v'?'on':'')+'" onclick="setStab(\'fleet\',\'v\')">Véhicules</div><div class="stab '+(st==='d'?'on':'')+'" onclick="setStab(\'fleet\',\'d\')">Conducteurs</div></div>';
   if(st==='v'){
-    if(!D.vehicles.length) h+='<div class="empty">Aucun véhicule — appuyez sur +</div>';
-    D.vehicles.forEach(function(v){
+    if(!D.vehicles.length) return h+'<div class="empty">Aucun véhicule — tapez + pour ajouter</div><button class="fab" onclick="openModal(\'vehicle\',null)">+</button>';
+    h+=D.vehicles.map(function(v){
       var drv=D.drivers.find(function(d){return d.id===v.driverId;});
-      var va=getAlerts().filter(function(a){return a.id.indexOf(v.id)>=0;});
-      var sp=(SBMAP[v.status]||'bx '+v.status).split(' ');
-      h+='<div class="vc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="plate">'+esc(v.plate)+'</div><div class="vmod">'+esc(v.brand)+' '+esc(v.model)+' · '+v.year+'</div></div><span class="badge '+sp[0]+'">'+esc(sp.slice(1).join(' '))+'</span></div>';
-      if(va.length) h+='<div style="margin-top:8px;padding:5px 10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;font-size:11px;color:#F87171">⚠ '+va.length+' alerte'+(va.length>1?'s':'')+'</div>';
-      h+='<div class="vs"><div class="vi"><b>'+v.mileage.toLocaleString('fr-FR')+' km</b>Km</div><div class="vi"><b>'+esc(v.fuelType||'—')+'</b>Énergie</div><div class="vi"><b>'+esc(drv?drv.name:'—')+'</b>Conducteur</div></div><div style="display:flex;gap:8px;margin-top:12px"><button class="bsm" data-a="edit" data-entity="vehicle" data-id="'+v.id+'">'+ic('edit',13)+'Modifier</button><button class="bsm d" data-a="del" data-entity="vehicle" data-id="'+v.id+'">'+ic('trash',13)+'</button></div></div>';
-    });
+      var sp=(({active:'bg Actif',available:'bb Dispo',maintenance:'ba Entretien',inactive:'bx Inactif'})[v.status]||'bx Inconnu').split(' ');
+      return '<div class="card" style="margin-bottom:10px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
+        +'<div><div style="font-size:18px;font-weight:800;letter-spacing:.5px">'+esc(v.plate)+'</div><div style="font-size:13px;color:var(--muted)">'+esc(v.brand)+' '+esc(v.model)+' · '+v.year+'</div></div>'
+        +'<span class="badge '+sp[0]+'">'+esc(sp.slice(1).join(' '))+'</span></div>'
+        +'<div style="display:flex;gap:16px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">'
+        +'<div style="font-size:11px;color:var(--muted)"><div style="font-size:13px;font-weight:600;color:var(--text)">'+v.mileage.toLocaleString('fr-FR')+' km</div>Km</div>'
+        +'<div style="font-size:11px;color:var(--muted)"><div style="font-size:13px;font-weight:600;color:var(--text)">'+esc(v.fuelType||'—')+'</div>Énergie</div>'
+        +'<div style="font-size:11px;color:var(--muted)"><div style="font-size:13px;font-weight:600;color:var(--text)">'+esc(drv?drv.name:'—')+'</div>Conducteur</div>'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;margin-top:12px">'
+        +'<button class="bsm" onclick="openModal(\'vehicle\',\''+v.id+'\')">✏ Modifier</button>'
+        +'<button class="bsm bsm-d" onclick="del(\'vehicles\',\''+v.id+'\')">🗑</button>'
+        +'</div></div>';
+    }).join('');
   } else {
-    if(!D.drivers.length) h+='<div class="empty">Aucun conducteur</div>';
-    D.drivers.forEach(function(drv){
-      var veh=D.vehicles.find(function(v){return v.driverId===drv.id;});
-      var dExp=daysTo(drv.licenseExpiry);
-      h+='<div class="vc"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:15px;font-weight:700">'+esc(drv.name)+'</div><div style="font-size:12px;color:#64748B;margin-top:2px">'+esc(drv.phone||'')+'</div></div>'+(veh?'<span class="badge bb">'+esc(veh.plate)+'</span>':'<span class="badge bx">—</span>')+'</div><div style="font-size:12px;color:'+(dExp<90?'#F59E0B':'#94A3B8')+';margin-top:10px">Permis : '+fdt(drv.licenseExpiry)+(dExp<90?' (J-'+dExp+')':'')+'</div><div style="display:flex;gap:8px;margin-top:10px"><button class="bsm" data-a="edit" data-entity="driver" data-id="'+drv.id+'">'+ic('edit',13)+'Modifier</button><button class="bsm d" data-a="del" data-entity="driver" data-id="'+drv.id+'">'+ic('trash',13)+'</button></div></div>';
-    });
+    if(!D.drivers.length) return h+'<div class="empty">Aucun conducteur</div><button class="fab" onclick="openModal(\'driver\',null)">+</button>';
+    h+=D.drivers.map(function(d){
+      var veh=D.vehicles.find(function(v){return v.driverId===d.id;});
+      return '<div class="card" style="margin-bottom:10px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center">'
+        +'<div><div style="font-size:15px;font-weight:700">'+esc(d.name)+'</div><div style="font-size:12px;color:var(--muted)">'+esc(d.phone||'')+'</div></div>'
+        +(veh?'<span class="badge bb">'+esc(veh.plate)+'</span>':'<span class="badge bx">—</span>')
+        +'</div>'
+        +'<div style="display:flex;gap:8px;margin-top:12px">'
+        +'<button class="bsm" onclick="openModal(\'driver\',\''+d.id+'\')">✏ Modifier</button>'
+        +'<button class="bsm bsm-d" onclick="del(\'drivers\',\''+d.id+'\')">🗑</button>'
+        +'</div></div>';
+    }).join('');
   }
-  h+='<button class="fab" data-a="add" data-entity="'+(st==='v'?'vehicle':'driver')+'">+</button>';
+  h+='<button class="fab" onclick="openModal(\''+(st==='v'?'vehicle':'driver')+'\',null)">+</button>';
   return h;
 }
 
-function viewEntretien(){
+function entretienView() {
   var st=STAB.entretien;
-  var h='<div class="stabs"><div class="stab '+(st==='m'?'on':'')+'" data-a="stab" data-key="entretien" data-val="m">Entretiens</div><div class="stab '+(st==='i'?'on':'')+'" data-a="stab" data-key="entretien" data-val="i">Assurances</div><div class="stab '+(st==='ct'?'on':'')+'" data-a="stab" data-key="entretien" data-val="ct">CT</div></div><div class="card">';
-  var eMap={m:'maintenance',i:'insurance',ct:'control'};
+  var h='<div class="stabs"><div class="stab '+(st==='m'?'on':'')+'" onclick="setStab(\'entretien\',\'m\')">Entretiens</div><div class="stab '+(st==='i'?'on':'')+'" onclick="setStab(\'entretien\',\'i\')">Assurances</div><div class="stab '+(st==='ct'?'on':'')+'" onclick="setStab(\'entretien\',\'ct\')">CT</div></div><div class="card">';
   if(st==='m'){
     if(!D.maintenances.length) h+='<div class="empty">Aucun entretien</div>';
-    D.maintenances.forEach(function(m){h+='<div class="row"><div><div class="rl">'+esc(m.type)+'</div><div class="rs">'+esc(vName(m.vehicleId))+'</div><div style="font-size:11px;color:'+dcol(m.nextDate)+';margin-top:3px">Prochain : '+fdt(m.nextDate)+'</div></div><div class="ra"><div class="rr">'+eur(m.cost)+'</div><button class="bsm" data-a="edit" data-entity="maintenance" data-id="'+m.id+'">'+ic('edit',13)+'</button><button class="bsm d" data-a="del" data-entity="maintenance" data-id="'+m.id+'">'+ic('trash',13)+'</button></div></div>';});
+    D.maintenances.forEach(function(m){var dc=daysTo(m.nextDate);h+='<div class="row"><div><div class="rl">'+esc(m.type)+'</div><div class="rs">'+esc(vname(m.vehicleId))+'</div><div style="font-size:11px;color:'+(dc<0?'#EF4444':dc<30?'#F59E0B':'#94A3B8')+';margin-top:3px">Prochain : '+fdt(m.nextDate)+'</div></div><div class="ra"><span style="font-size:13px;font-weight:700">'+eur(m.cost)+'</span><button class="bsm" onclick="openModal(\'maintenance\',\''+m.id+'\')">✏</button><button class="bsm bsm-d" onclick="del(\'maintenances\',\''+m.id+'\')">🗑</button></div></div>';});
   } else if(st==='i'){
     if(!D.insurances.length) h+='<div class="empty">Aucune assurance</div>';
-    D.insurances.forEach(function(i){var n=daysTo(i.endDate);h+='<div class="row"><div><div class="rl">'+esc(i.provider)+'</div><div class="rs">'+esc(vName(i.vehicleId))+' · '+esc(i.type||'')+'</div><div style="font-size:11px;color:'+dcol(i.endDate)+';margin-top:3px">Expire : '+fdt(i.endDate)+(n<=30?' (J-'+n+')':'')+'</div></div><div class="ra"><div class="rr">'+eur(i.annualCost)+'/an</div><button class="bsm" data-a="edit" data-entity="insurance" data-id="'+i.id+'">'+ic('edit',13)+'</button><button class="bsm d" data-a="del" data-entity="insurance" data-id="'+i.id+'">'+ic('trash',13)+'</button></div></div>';});
+    D.insurances.forEach(function(i){var n=daysTo(i.endDate);h+='<div class="row"><div><div class="rl">'+esc(i.provider)+'</div><div class="rs">'+esc(vname(i.vehicleId))+' · '+esc(i.type||'')+'</div><div style="font-size:11px;color:'+(n<30?'#F59E0B':'#94A3B8')+';margin-top:3px">'+fdt(i.endDate)+(n<=30?' (J-'+n+')':'')+'</div></div><div class="ra"><span style="font-size:13px;font-weight:700">'+eur(i.annualCost)+'</span><button class="bsm" onclick="openModal(\'insurance\',\''+i.id+'\')">✏</button><button class="bsm bsm-d" onclick="del(\'insurances\',\''+i.id+'\')">🗑</button></div></div>';});
   } else {
     if(!D.controls.length) h+='<div class="empty">Aucun CT</div>';
-    D.controls.forEach(function(ct){var n=daysTo(ct.nextDate);h+='<div class="row"><div><div class="rl">'+esc(vName(ct.vehicleId))+'</div><div class="rs">'+esc(ct.result||'')+'</div><div style="font-size:11px;color:'+dcol(ct.nextDate)+';margin-top:3px">Prochain : '+fdt(ct.nextDate)+(n<=60&&n>0?' (J-'+n+')':'')+'</div></div><div class="ra"><span class="badge '+(ct.result==='Favorable'?'bg':'br')+'">'+(ct.result==='Favorable'?'✓':'✗')+'</span><button class="bsm" data-a="edit" data-entity="control" data-id="'+ct.id+'">'+ic('edit',13)+'</button><button class="bsm d" data-a="del" data-entity="control" data-id="'+ct.id+'">'+ic('trash',13)+'</button></div></div>';});
+    D.controls.forEach(function(ct){var n=daysTo(ct.nextDate);h+='<div class="row"><div><div class="rl">'+esc(vname(ct.vehicleId))+'</div><div class="rs">'+esc(ct.result||'')+'</div><div style="font-size:11px;color:'+(n<60?'#F59E0B':'#94A3B8')+';margin-top:3px">Prochain : '+fdt(ct.nextDate)+(n<60&&n>0?' (J-'+n+')':'')+'</div></div><div class="ra"><span class="badge '+(ct.result==='Favorable'?'bg':'br')+'">'+(ct.result==='Favorable'?'✓':'✗')+'</span><button class="bsm" onclick="openModal(\'control\',\''+ct.id+'\')">✏</button><button class="bsm bsm-d" onclick="del(\'controls\',\''+ct.id+'\')">🗑</button></div></div>';});
   }
-  h+='</div><button class="fab" data-a="add" data-entity="'+eMap[st]+'">+</button>';
+  h+='</div><button class="fab" onclick="openModal(\''+(st==='m'?'maintenance':st==='i'?'insurance':'control')+'\',null)">+</button>';
   return h;
 }
 
-function viewFuel(){
-  var cData=D.vehicles.map(function(v){var logs=D.fuelLogs.filter(function(f){return f.vehicleId===v.id;}).sort(function(a,b){return+new Date(a.date)-+new Date(b.date);});var c=null;if(logs.length>=2){var km=logs[logs.length-1].mileage-logs[0].mileage;var lit=logs.slice(1).reduce(function(s,l){return s+l.liters;},0);if(km>0)c=parseFloat(((lit/km)*100).toFixed(1));}return{name:v.plate,L:c};}).filter(function(x){return x.L!=null;});
+function fuelView() {
   var sorted=D.fuelLogs.slice().sort(function(a,b){return+new Date(b.date)-+new Date(a.date);});
-  var h='';
-  if(cData.length) h+='<div class="card"><div class="ctit">Consommation (L/100km)</div>'+simpleBarSVG(cData,'L','#00C896')+'</div>';
-  h+='<div class="card"><div class="ctit">Historique</div>';
+  var h='<div class="card"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Historique</div>';
   if(!sorted.length) h+='<div class="empty">Aucun plein enregistré</div>';
-  sorted.forEach(function(f){h+='<div class="row"><div><div class="rl">'+esc(vName(f.vehicleId))+'</div><div class="rs">'+fdt(f.date)+' · '+f.liters+'L · '+f.pricePerLiter+'€/L</div></div><div class="ra"><div class="rr" style="color:#00C896">'+eur(f.totalCost)+'</div><button class="bsm d" data-a="del" data-entity="fuel" data-id="'+f.id+'">'+ic('trash',13)+'</button></div></div>';});
-  h+='</div><button class="fab" data-a="add" data-entity="fuel">+</button>';
+  sorted.forEach(function(f){h+='<div class="row"><div><div class="rl">'+esc(vname(f.vehicleId))+'</div><div class="rs">'+fdt(f.date)+' · '+f.liters+'L · '+f.pricePerLiter+'€/L</div></div><div class="ra"><span style="font-size:13px;font-weight:700;color:#00C896">'+eur(f.totalCost)+'</span><button class="bsm bsm-d" onclick="del(\'fuelLogs\',\''+f.id+'\')">🗑</button></div></div>';});
+  h+='</div><button class="fab" onclick="openModal(\'fuel\',null)">+</button>';
   return h;
 }
 
-function viewPlus(){
+function plusView() {
   var st=STAB.plus;
-  var h='<div class="stabs"><div class="stab '+(st==='res'?'on':'')+'" data-a="stab" data-key="plus" data-val="res">Réservations</div><div class="stab '+(st==='rep'?'on':'')+'" data-a="stab" data-key="plus" data-val="rep">Réparations</div></div><div class="card">';
+  var h='<div class="stabs"><div class="stab '+(st==='res'?'on':'')+'" onclick="setStab(\'plus\',\'res\')">Réservations</div><div class="stab '+(st==='rep'?'on':'')+'" onclick="setStab(\'plus\',\'rep\')">Réparations</div></div><div class="card">';
   if(st==='res'){
     var res=D.reservations.slice().sort(function(a,b){return+new Date(a.startDate)-+new Date(b.startDate);});
     if(!res.length) h+='<div class="empty">Aucune réservation</div>';
-    res.forEach(function(r){h+='<div class="row"><div><div class="rl">'+esc(vName(r.vehicleId))+'</div><div class="rs">'+esc(dName(r.driverId))+' · '+fdt(r.startDate)+' → '+fdt(r.endDate)+'</div>'+(r.purpose?'<div style="font-size:11px;color:#64748B;margin-top:2px">'+esc(r.purpose)+'</div>':'')+'</div><div class="ra">'+sbadge(r.status)+'<button class="bsm" data-a="edit" data-entity="reservation" data-id="'+r.id+'">'+ic('edit',13)+'</button><button class="bsm d" data-a="del" data-entity="reservation" data-id="'+r.id+'">'+ic('trash',13)+'</button></div></div>';});
+    res.forEach(function(r){h+='<div class="row"><div><div class="rl">'+esc(vname(r.vehicleId))+'</div><div class="rs">'+esc(dname(r.driverId))+' · '+fdt(r.startDate)+' → '+fdt(r.endDate)+'</div>'+(r.purpose?'<div style="font-size:11px;color:var(--muted);margin-top:2px">'+esc(r.purpose)+'</div>':'')+'</div><div class="ra">'+sbadge(r.status)+'<button class="bsm" onclick="openModal(\'reservation\',\''+r.id+'\')">✏</button><button class="bsm bsm-d" onclick="del(\'reservations\',\''+r.id+'\')">🗑</button></div></div>';});
   } else {
     var rep=D.repairs.slice().sort(function(a,b){return+new Date(b.date)-+new Date(a.date);});
     if(!rep.length) h+='<div class="empty">Aucune réparation</div>';
-    rep.forEach(function(r){h+='<div class="row"><div><div class="rl">'+esc(r.description)+'</div><div class="rs">'+esc(vName(r.vehicleId))+' · '+fdt(r.date)+'</div>'+(r.provider?'<div style="font-size:11px;color:#64748B;margin-top:2px">'+esc(r.provider)+'</div>':'')+'</div><div class="ra"><div class="rr" style="color:#F59E0B">'+eur(r.cost)+'</div><button class="bsm d" data-a="del" data-entity="repair" data-id="'+r.id+'">'+ic('trash',13)+'</button></div></div>';});
+    rep.forEach(function(r){h+='<div class="row"><div><div class="rl">'+esc(r.description)+'</div><div class="rs">'+esc(vname(r.vehicleId))+' · '+fdt(r.date)+'</div></div><div class="ra"><span style="font-size:13px;font-weight:700;color:#F59E0B">'+eur(r.cost)+'</span><button class="bsm bsm-d" onclick="del(\'repairs\',\''+r.id+'\')">🗑</button></div></div>';});
   }
-  h+='</div><button class="fab" data-a="add" data-entity="'+(st==='res'?'reservation':'repair')+'">+</button>';
+  h+='</div><button class="fab" onclick="openModal(\''+(st==='res'?'reservation':'repair')+'\',null)">+</button>';
   return h;
 }
 
-// ─── Render ────────────────────────────────────────────────────────────────
-function render(){
-  var alerts=getAlerts(),crits=alerts.filter(function(a){return a.level==='crit';}).length;
-  // Topbar
-  q('#topbar').innerHTML='<div class="logo">🚗 Vroum !</div><div style="display:flex;align-items:center;gap:8px">'+(alerts.length?'<div data-a="goto" data-tab="home" class="sync-status sync-err">'+ic('bell',13,'#FCA5A5')+(crits||alerts.length)+'</div>':'')+'<button type="button" class="bsm" data-a="refresh">'+ic('refresh',14,'#64748B')+'</button></div>';
-  // Nav
-  var tabs=[['home','home','Accueil'],['fleet','car','Flotte'],['entretien','wrench','Entretien'],['fuel','fuel','Carburant'],['plus','more','Plus']];
-  q('#bnav').innerHTML=tabs.map(function(t){return'<div class="ntab '+(TAB===t[0]?'on':'')+'" data-a="goto" data-tab="'+t[0]+'">'+ic(t[1],22,TAB===t[0]?'#00C896':'#64748B')+t[2]+(t[0]==='home'&&crits>0?'<div class="ndot"></div>':'')+' </div>';}).join('');
-  // Content
-  var views={home:viewHome,fleet:viewFleet,entretien:viewEntretien,fuel:viewFuel,plus:viewPlus};
-  q('#content').innerHTML=(views[TAB]||viewHome)();
-  // Modal
-  var md=q('#modal');
-  if(MODAL){
-    md.innerHTML=buildModalForm();
-    md.className='open';
-    bindModal();
-  } else {
-    md.innerHTML='';
-    md.className='';
+// ── Nav ─────────────────────────────────────────────────────────
+var TABS=[['home','🏠','Accueil'],['fleet','🚗','Flotte'],['entretien','🔧','Entretien'],['fuel','⛽','Carburant'],['plus','•••','Plus']];
+function render() {
+  var views={home:homeView,fleet:fleetView,entretien:entretienView,fuel:fuelView,plus:plusView};
+  document.getElementById('content').innerHTML=(views[TAB]||homeView)();
+  document.getElementById('bnav').innerHTML=TABS.map(function(t){return'<div class="ntab '+(TAB===t[0]?'on':'')+'" onclick="goTab(\''+t[0]+'\')" style="cursor:pointer">'+t[1]+'<span>'+t[2]+'</span></div>';}).join('');
+}
+function goTab(t){TAB=t;render();}
+function setStab(k,v){STAB[k]=v;render();}
+function del(arr,id){if(!confirm('Supprimer ?'))return;D[arr]=D[arr].filter(function(x){return x.id!==id;});render();save(arr);notif('Supprimé',true);}
+
+// ── Modal ───────────────────────────────────────────────────────
+var MODAL_ENTITY=null, MODAL_ID=null;
+
+function fi(lbl,name,val,type,ph){return'<div class="fg"><label>'+lbl+'</label><input type="'+(type||'text')+'" name="'+name+'" value="'+esc(val||'')+'" placeholder="'+esc(ph||'')+'"/></div>';}
+function fsel(lbl,name,val,opts){var h='<div class="fg"><label>'+lbl+'</label><select name="'+name+'"><option value="">— Choisir —</option>';opts.forEach(function(o){var v=o.v||o,l=o.l||o;h+='<option value="'+esc(v)+'"'+(String(val)===String(v)?' selected':'')+'>'+esc(l)+'</option>';});return h+'</select></div>';}
+
+function openModal(entity, id) {
+  MODAL_ENTITY=entity; MODAL_ID=id;
+  var KEY={vehicle:'vehicles',driver:'drivers',maintenance:'maintenances',insurance:'insurances',control:'controls',fuel:'fuelLogs',reservation:'reservations',repair:'repairs'};
+  var arr=D[KEY[entity]]||[];
+  var i=(id?arr.find(function(x){return x.id===id;}):null)||{};
+  var titles={vehicle:'Véhicule',driver:'Conducteur',maintenance:'Entretien',insurance:'Assurance',control:'Contrôle technique',fuel:'Plein de carburant',reservation:'Réservation',repair:'Réparation'};
+  var body='';
+  var vOpts=D.vehicles.map(function(v){return{v:v.id,l:v.plate+' — '+v.brand+' '+v.model};});
+  var dOpts=D.drivers.map(function(d){return{v:d.id,l:d.name};});
+  switch(entity){
+    case 'vehicle': body=fi('Immatriculation','plate',i.plate,'text','AB-123-CD')+fi('Marque','brand',i.brand)+fi('Modèle','model',i.model)+fi('Année','year',i.year,'number')+fi('Kilométrage','mileage',i.mileage,'number')+fsel('Énergie','fuelType',i.fuelType,['Diesel','Essence','Hybride','Électrique','GPL'])+fsel('Statut','status',i.status,[{v:'active',l:'Actif'},{v:'available',l:'Disponible'},{v:'maintenance',l:'En entretien'},{v:'inactive',l:'Inactif'}])+fsel('Conducteur','driverId',i.driverId,dOpts)+fi("Date d'achat",'purchaseDate',i.purchaseDate,'date')+fi("Prix d'achat (€)",'purchasePrice',i.purchasePrice,'number'); break;
+    case 'driver': body=fi('Nom','name',i.name)+fi('N° Permis','license',i.license)+fi('Expiration permis','licenseExpiry',i.licenseExpiry,'date')+fi('Téléphone','phone',i.phone,'tel')+fi('Email','email',i.email,'email'); break;
+    case 'maintenance': body=fsel('Véhicule','vehicleId',i.vehicleId,vOpts)+fi('Type','type',i.type,'text','Vidange…')+fi('Date','date',i.date,'date')+fi('Km effectué','mileageDone',i.mileageDone,'number')+fi('Coût (€)','cost',i.cost,'number')+fi('Prestataire','provider',i.provider)+fi('Prochain RDV','nextDate',i.nextDate,'date')+fi('Prochain Km','nextMileage',i.nextMileage,'number'); break;
+    case 'insurance': body=fsel('Véhicule','vehicleId',i.vehicleId,vOpts)+fi('Assureur','provider',i.provider)+fi('N° Police','policy',i.policy)+fsel('Type','type',i.type,['Tous risques','Tiers','Flotte'])+fi('Début','startDate',i.startDate,'date')+fi('Fin','endDate',i.endDate,'date')+fi('Coût annuel (€)','annualCost',i.annualCost,'number'); break;
+    case 'control': body=fsel('Véhicule','vehicleId',i.vehicleId,vOpts)+fi('Date CT','date',i.date,'date')+fi('Prochain CT','nextDate',i.nextDate,'date')+fsel('Résultat','result',i.result,['Favorable','Défavorable'])+fi('Coût (€)','cost',i.cost,'number'); break;
+    case 'fuel': body=fsel('Véhicule','vehicleId',i.vehicleId,vOpts)+fi('Date','date',i.date||new Date().toISOString().slice(0,10),'date')+fi('Litres','liters',i.liters,'number','52')+fi('Prix/L (€)','pricePerLiter',i.pricePerLiter,'number','1.72')+fi('Total (€)','totalCost',i.totalCost,'number','auto')+fi('Kilométrage','mileage',i.mileage,'number'); break;
+    case 'reservation': body=fsel('Véhicule','vehicleId',i.vehicleId,vOpts)+fsel('Conducteur','driverId',i.driverId,dOpts)+fi('Départ','startDate',i.startDate,'date')+fi('Retour','endDate',i.endDate,'date')+fi('Motif','purpose',i.purpose,'text','Déplacement…')+fsel('Statut','status',i.status||'pending',[{v:'pending',l:'En attente'},{v:'confirmed',l:'Confirmé'},{v:'canceled',l:'Annulé'}]); break;
+    case 'repair': body=fsel('Véhicule','vehicleId',i.vehicleId,vOpts)+fi('Date','date',i.date||new Date().toISOString().slice(0,10),'date')+fi('Description','description',i.description,'text','Remplacement…')+fi('Prestataire','provider',i.provider)+fi('Coût (€)','cost',i.cost,'number')+fi('Kilométrage','mileage',i.mileage,'number'); break;
   }
+  document.getElementById('modal-root').innerHTML='<div class="overlay" id="overlay"><div class="sheet"><div class="sheet-handle"></div><div class="sheet-head"><span class="sheet-title">'+(id?'Modifier':'Nouveau')+' '+titles[entity]+'</span><button onclick="closeModal()" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:0">×</button></div><div class="sheet-body"><form id="the-form" onsubmit="return false;">'+body+'</form></div><div class="sheet-foot"><button class="btn btn-g" onclick="closeModal()">Annuler</button><button class="btn btn-p" onclick="doSave()">Enregistrer</button></div></div></div>';
+  document.getElementById('overlay').addEventListener('click',function(e){if(e.target.id==='overlay')closeModal();});
 }
 
-// ─── Modal button binding ──────────────────────────────────────────────────
-function bindModal(){
-  var btnClose=q('#btn-close-modal');
-  var btnCancel=q('#btn-cancel-modal');
-  var btnSave=q('#btn-save-modal');
-  var overlay=q('#modal-overlay');
-  if(btnClose) btnClose.addEventListener('click',function(){MODAL=null;render();});
-  if(btnCancel) btnCancel.addEventListener('click',function(){MODAL=null;render();});
-  if(overlay) overlay.addEventListener('click',function(e){if(e.target===overlay){MODAL=null;render();}});
-  if(btnSave) btnSave.addEventListener('click',function(){doSave();});
-}
-
-// ─── Save logic ────────────────────────────────────────────────────────────
-var KEY_MAP={vehicle:'vehicles',driver:'drivers',maintenance:'maintenances',insurance:'insurances',control:'controls',fuel:'fuelLogs',reservation:'reservations',repair:'repairs'};
-
-function readFormData(){
-  var form=q('#modal-form');
-  if(!form) return {};
-  var out={};
-  form.querySelectorAll('input,select').forEach(function(el){if(el.name) out[el.name]=el.value;});
-  return out;
-}
+function closeModal(){document.getElementById('modal-root').innerHTML='';MODAL_ENTITY=null;MODAL_ID=null;}
 
 function doSave(){
-  showBanner('⏳ Enregistrement…','warn');
-  var e=MODAL.entity, id=MODAL.id;
-  var dbKey=KEY_MAP[e];
-  if(!dbKey){showBanner('⚠ Entité inconnue','err');return;}
-  var f=readFormData();
-  // Type coercions
-  if(e==='vehicle'){f.mileage=parseInt(f.mileage)||0;f.year=parseInt(f.year)||2020;f.purchasePrice=parseFloat(f.purchasePrice)||0;}
-  if(e==='maintenance'){f.cost=parseFloat(f.cost)||0;f.mileageDone=parseInt(f.mileageDone)||0;f.nextMileage=parseInt(f.nextMileage)||0;}
-  if(e==='insurance') f.annualCost=parseFloat(f.annualCost)||0;
-  if(e==='control') f.cost=parseFloat(f.cost)||0;
-  if(e==='fuel'){f.liters=parseFloat(f.liters)||0;f.pricePerLiter=parseFloat(f.pricePerLiter)||0;f.totalCost=parseFloat(f.totalCost)||(f.liters*f.pricePerLiter);f.mileage=parseInt(f.mileage)||0;}
-  if(e==='reservation') f.status=f.status||'pending';
-  if(e==='repair'){f.cost=parseFloat(f.cost)||0;f.mileage=parseInt(f.mileage)||0;}
-  // Update state
-  if(id){
-    D[dbKey]=D[dbKey].map(function(x){return x.id===id?Object.assign({},x,f):x;});
-  } else {
-    D[dbKey].push(Object.assign({},f,{id:uid()}));
-  }
-  // Close modal and re-render
-  MODAL=null;
+  var form=document.getElementById('the-form');
+  if(!form){notif('Erreur : formulaire introuvable',false);return;}
+  var f={};
+  form.querySelectorAll('input,select').forEach(function(el){if(el.name)f[el.name]=el.value;});
+  var KEY={vehicle:'vehicles',driver:'drivers',maintenance:'maintenances',insurance:'insurances',control:'controls',fuel:'fuelLogs',reservation:'reservations',repair:'repairs'};
+  var dbKey=KEY[MODAL_ENTITY];
+  if(!dbKey){notif('Erreur entité',false);return;}
+  // Coercions
+  if(MODAL_ENTITY==='vehicle'){f.mileage=parseInt(f.mileage)||0;f.year=parseInt(f.year)||2020;f.purchasePrice=parseFloat(f.purchasePrice)||0;}
+  if(MODAL_ENTITY==='maintenance'){f.cost=parseFloat(f.cost)||0;f.mileageDone=parseInt(f.mileageDone)||0;f.nextMileage=parseInt(f.nextMileage)||0;}
+  if(MODAL_ENTITY==='insurance')f.annualCost=parseFloat(f.annualCost)||0;
+  if(MODAL_ENTITY==='control')f.cost=parseFloat(f.cost)||0;
+  if(MODAL_ENTITY==='fuel'){f.liters=parseFloat(f.liters)||0;f.pricePerLiter=parseFloat(f.pricePerLiter)||0;f.totalCost=parseFloat(f.totalCost)||parseFloat((f.liters*f.pricePerLiter).toFixed(2));f.mileage=parseInt(f.mileage)||0;}
+  if(MODAL_ENTITY==='reservation')f.status=f.status||'pending';
+  if(MODAL_ENTITY==='repair'){f.cost=parseFloat(f.cost)||0;f.mileage=parseInt(f.mileage)||0;}
+  // Update D
+  if(MODAL_ID){D[dbKey]=D[dbKey].map(function(x){return x.id===MODAL_ID?Object.assign({},x,f):x;});}
+  else{D[dbKey].push(Object.assign({},f,{id:uid()}));}
+  closeModal();
   render();
-  // Save to localStorage immediately
-  lsSave();
-  // Save to Supabase
-  sbUpsert(dbKey,D[dbKey]).then(function(){
-    showBanner('✓ Enregistré'+( SB_OK?'':' (local)'), 'ok');
-    SB_OK=true;
-  }).catch(function(err){
-    showBanner('⚠ Local seulement — '+String(err).slice(0,40),'err');
-  });
+  save(dbKey);
+  notif('✓ Enregistré',true);
 }
 
-// ─── Delete ────────────────────────────────────────────────────────────────
-function doDelete(entity,id){
-  if(!confirm('Supprimer ?')) return;
-  var dbKey=KEY_MAP[entity];
-  if(!dbKey) return;
-  D[dbKey]=D[dbKey].filter(function(x){return x.id!==id;});
-  render();
-  lsSave();
-  sbUpsert(dbKey,D[dbKey]).then(function(){showBanner('✓ Supprimé','ok');}).catch(function(){showBanner('⚠ Suppression locale seulement','err');});
-}
-
-// ─── Events ────────────────────────────────────────────────────────────────
-document.addEventListener('click',function(e){
-  var el=e.target.closest('[data-a]');
-  if(!el) return;
-  var a=el.getAttribute('data-a');
-  if(a==='goto'){TAB=el.dataset.tab;render();}
-  else if(a==='stab'){STAB[el.dataset.key]=el.dataset.val;render();}
-  else if(a==='add'){MODAL={entity:el.dataset.entity,id:null};render();}
-  else if(a==='edit'){MODAL={entity:el.dataset.entity,id:el.dataset.id};render();}
-  else if(a==='del'){doDelete(el.dataset.entity,el.dataset.id);}
-  else if(a==='refresh'){loadData();}
-});
-
-// ─── Data load ─────────────────────────────────────────────────────────────
-function loadData(){
-  q('#loader').style.display='flex';
-  sbLoad().then(function(rows){
-    rows.forEach(function(row){if(D.hasOwnProperty(row.key)&&Array.isArray(row.value)) D[row.key]=row.value;});
-    lsSave();
-    SB_OK=true;
-    q('#loader').style.display='none';
-    render();
-    showBanner('✓ Synchronisé','ok');
-  }).catch(function(err){
-    // Supabase failed → use localStorage
-    lsLoad();
-    SB_OK=false;
-    q('#loader').style.display='none';
-    render();
-    showBanner('⚠ Mode local — '+String(err).slice(0,40),'err');
-  });
-}
-
-document.addEventListener('visibilitychange',function(){if(!document.hidden) loadData();});
-
-// ─── Code screen ───────────────────────────────────────────────────────────
+// ── Code screen ─────────────────────────────────────────────────
 function checkCode(){
-  var val=q('#code-input').value.trim().toUpperCase();
-  if(CODES.indexOf(val)>=0){
-    localStorage.setItem('vroum_code',val);
-    q('#code-screen').style.display='none';
-    q('#shell').style.display='flex';
-    loadData();
+  var v=document.getElementById('code-in').value.trim().toUpperCase();
+  if(CODES.indexOf(v)>=0){
+    localStorage.setItem('vroum_code',v);
+    document.getElementById('code-screen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    load();render();
   } else {
-    q('#code-err').textContent='Code incorrect';
-    setTimeout(function(){q('#code-err').textContent='';},2000);
+    document.getElementById('code-err').textContent='Code incorrect';
+    setTimeout(function(){document.getElementById('code-err').textContent='';},2000);
   }
 }
-q('#code-btn').addEventListener('click',checkCode);
-q('#code-input').addEventListener('keydown',function(e){if(e.key==='Enter') checkCode();});
+document.getElementById('code-btn').addEventListener('click',checkCode);
+document.getElementById('code-in').addEventListener('keydown',function(e){if(e.key==='Enter')checkCode();});
 
-// ─── Init ──────────────────────────────────────────────────────────────────
+// ── Init ────────────────────────────────────────────────────────
 if(CODES.indexOf(localStorage.getItem('vroum_code'))>=0){
-  q('#code-screen').style.display='none';
-  q('#shell').style.display='flex';
-  loadData();
+  document.getElementById('code-screen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  load();render();
 }
 </script>
 </body>
